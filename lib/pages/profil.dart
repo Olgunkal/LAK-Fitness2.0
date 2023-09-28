@@ -8,6 +8,7 @@ import 'package:lak_fitness/styles/color.dart';
 import 'package:lak_fitness/styles/text_box.dart';
 import 'package:lak_fitness/styles/utils.dart';
 import 'package:lak_fitness/styles/change_password.dart';
+import 'package:lak_fitness/Database.dart';
 
 class Profil extends StatefulWidget {
   const Profil({super.key});
@@ -175,6 +176,7 @@ class _ProfilState extends State<Profil> {
 
   @override
   Widget build(BuildContext context) {
+    final currentuser = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
@@ -190,98 +192,115 @@ class _ProfilState extends State<Profil> {
               onPressed: signUserOut, icon: const Icon(Icons.logout_rounded))
         ],
       ),
-      body: ListView(children: [
-        // Profilbild
-        Container(
-          alignment: Alignment.center,
-          margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: purple,
-              width: 2,
-            ),
-          ),
-          child: Stack(children: [
-            image != null
-                ? CircleAvatar(
-                    radius: 50,
-                    child: ClipOval(
-                      child: Image.memory(image!,
-                          width: 150, height: 150, fit: BoxFit.cover),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: Database().nutzer.doc(currentuser.uid).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final userData = snapshot.data!.data() as Map<String, dynamic>;
+
+            return ListView(children: [
+              // Profilbild
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: purple,
+                    width: 2,
+                  ),
+                ),
+                child: Stack(children: [
+                  image != null
+                      ? CircleAvatar(
+                          radius: 50,
+                          child: ClipOval(
+                            child: Image.memory(image!,
+                                width: 150, height: 150, fit: BoxFit.cover),
+                          ),
+                        )
+                      : const Icon(
+                          Icons.account_circle,
+                          size: 100.0,
+                        ),
+                  Positioned(
+                    bottom: -15,
+                    left: 65,
+                    child: IconButton(
+                      onPressed: selectImage,
+                      icon: const Icon(Icons.add_a_photo),
+                      color: white,
                     ),
                   )
-                : const Icon(
-                    Icons.account_circle,
-                    size: 100.0,
-                  ),
-            Positioned(
-              bottom: -15,
-              left: 65,
-              child: IconButton(
-                onPressed: selectImage,
-                icon: const Icon(Icons.add_a_photo),
-                color: white,
+                ]),
               ),
-            )
-          ]),
-        ),
 
-        // Benutzername
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            textAlign: TextAlign.center,
-            'Max Mustermann', // Name muss aus der Datenbank geholt werden
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ),
+              // Benutzername
+              Container(
+                margin: const EdgeInsets.only(top: 8),
+                child: Text(
+                  userData['Benutzername'],
+                  textAlign: TextAlign
+                      .center, // Name muss aus der Datenbank geholt werden
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
 
-        // Benutzer Geburtstag
-        MyTextBox(
-          sectionName: 'Geburtstag:',
-          text:
-              '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
-          unit: '',
-          onPressed: () => editGeb(),
-        ),
+              // Benutzer Geburtstag
+              MyTextBox(
+                sectionName: 'Geburtstag:',
+                text:
+                    '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
+                unit: '',
+                onPressed: () => editGeb(),
+              ),
 
-        // Benutzer Gewicht
-        MyTextBox(
-          sectionName: 'Gewicht:',
-          text: '80',
-          unit: 'kg',
-          onPressed: () => editField('Gewicht'),
-        ),
+              // Benutzer Gewicht
+              MyTextBox(
+                sectionName: 'Gewicht:',
+                text: '80',
+                unit: 'kg',
+                onPressed: () => editField('Gewicht'),
+              ),
 
-        // Benutzer Körpergröße
-        MyTextBox(
-          sectionName: 'Größe:',
-          text: '180',
-          unit: 'cm',
-          onPressed: () => editField('Größe'),
-        ),
+              // Benutzer Körpergröße
+              MyTextBox(
+                sectionName: 'Größe:',
+                text: '180',
+                unit: 'cm',
+                onPressed: () => editField('Größe'),
+              ),
 
-        // Benutzer Email
-        MyTextBox(
-          sectionName: 'Email:',
-          text: 'currentUser.Email!',
-          unit: '',
-          onPressed: () => editField('Email'),
-        ),
+              // Benutzer Email
+              MyTextBox(
+                sectionName: 'Email:',
+                text: userData['Email'],
+                unit: '',
+                onPressed: () => editField('Email'),
+              ),
 
-        // Passwort ändern
-        Container(
-          margin: const EdgeInsets.only(left: 20, top: 32, right: 20),
-          child: ElevatedButton(
-              onPressed: newPassword,
-              style: buttonPrimary,
-              child: Text(
-                'Passwort ändern',
-                style: Theme.of(context).textTheme.bodyLarge,
-              )),
-        ),
-      ]),
+              // Passwort ändern
+              Container(
+                margin: const EdgeInsets.only(left: 20, top: 32, right: 20),
+                child: ElevatedButton(
+                    onPressed: newPassword,
+                    style: buttonPrimary,
+                    child: Text(
+                      'Passwort ändern',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    )),
+              ),
+            ]);
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error${snapshot.error}'),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     );
   }
 }

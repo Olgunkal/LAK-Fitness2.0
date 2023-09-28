@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../Database.dart';
 import '../loginAndRegistration/Textfield/my_textfield.dart';
 import '../loginAndRegistration/button/my_button.dart';
+import 'package:lak_fitness/Database.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final Function()? onTap;
@@ -45,13 +47,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       );
     }
 
-    Future addUserDetails(String username, String email) async {
-      await FirebaseFirestore.instance.collection('users').add({
-        'Benutzername': username,
-        'Email': email,
-      });
-    }
-
     //Registration User
     Future registrationUser() async {
       //show loading cirle
@@ -79,7 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
-        addUserDetails(usernameController.text, emailController.text);
+        Database().setBenutzer(usernameController.text, emailController.text);
         Navigator.pop(context);
       }
     }
