@@ -41,6 +41,7 @@ dependencies:
   fl_chart: ^0.63.0
   image_picker: ^1.0.4
   flutter_spinbox: ^0.13.1
+  cloud_firestore: ^4.9.2
 
 dev_dependencies:
   flutter_test:
