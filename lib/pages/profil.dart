@@ -19,7 +19,10 @@ class Profil extends StatefulWidget {
 
 class _ProfilState extends State<Profil> {
   // Variablen Dekleartion
+  var gewicht = 0;
   var geb = DateTime.now();
+  var groesse = 0;
+  var email = "";
   var startZeitraum = DateTime(2021);
   var endeZeitraum = DateTime(2500);
 
@@ -51,9 +54,10 @@ class _ProfilState extends State<Profil> {
   //final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   // Bearbeitung der Nutzereigenschaften
-  Future<void> editField(String field) async {
+  Future<T> editField<T>(String id, String field) async {
     String newValue = "";
-    await showDialog(
+
+    return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: background,
@@ -81,7 +85,7 @@ class _ProfilState extends State<Profil> {
         actions: [
           // cancel button
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(context).pop(T == String ? "" : 0),
             child: Text(
               'Abbrechen',
               style: TextStyle(
@@ -91,7 +95,19 @@ class _ProfilState extends State<Profil> {
 
           // save button
           TextButton(
-            onPressed: () => Navigator.of(context).pop(newValue),
+            onPressed: () async => {
+              await FirebaseFirestore.instance
+                  .collection('Nutzer')
+                  .doc(id)
+                  .update({
+                field: (T == String
+                    ? newValue
+                    : (newValue.isEmpty ? 0 : int.parse(newValue)))
+              }),
+              Navigator.of(context).pop(T == String
+                  ? newValue
+                  : (newValue.isEmpty ? 0 : int.parse(newValue)))
+            },
             child: Text(
               'Speichern',
               style: TextStyle(
@@ -192,115 +208,137 @@ class _ProfilState extends State<Profil> {
               onPressed: signUserOut, icon: const Icon(Icons.logout_rounded))
         ],
       ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: Database().nutzer.doc(currentuser.uid).snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final userData = snapshot.data!.data() as Map<String, dynamic>;
+      body: FutureBuilder(
+          future: connectToFirebase(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              return StreamBuilder<DocumentSnapshot>(
+                stream: Database().nutzer.doc(currentuser.uid).snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final userData =
+                        snapshot.data!.data() as Map<String, dynamic>;
 
-            return ListView(children: [
-              // Profilbild
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: purple,
-                    width: 2,
-                  ),
-                ),
-                child: Stack(children: [
-                  image != null
-                      ? CircleAvatar(
-                          radius: 50,
-                          child: ClipOval(
-                            child: Image.memory(image!,
-                                width: 150, height: 150, fit: BoxFit.cover),
+                    groesse = userData['Größe'];
+                    gewicht = userData['Gewicht'];
+                    email = userData['Email'];
+
+                    return ListView(children: [
+                      // Profilbild
+                      Container(
+                        alignment: Alignment.center,
+                        margin:
+                            const EdgeInsets.only(top: 10, left: 20, right: 20),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: purple,
+                            width: 2,
                           ),
-                        )
-                      : const Icon(
-                          Icons.account_circle,
-                          size: 100.0,
                         ),
-                  Positioned(
-                    bottom: -15,
-                    left: 65,
-                    child: IconButton(
-                      onPressed: selectImage,
-                      icon: const Icon(Icons.add_a_photo),
-                      color: white,
-                    ),
-                  )
-                ]),
-              ),
+                        child: Stack(children: [
+                          image != null
+                              ? CircleAvatar(
+                                  radius: 50,
+                                  child: ClipOval(
+                                    child: Image.memory(image!,
+                                        width: 150,
+                                        height: 150,
+                                        fit: BoxFit.cover),
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.account_circle,
+                                  size: 100.0,
+                                ),
+                          Positioned(
+                            bottom: -15,
+                            left: 65,
+                            child: IconButton(
+                              onPressed: selectImage,
+                              icon: const Icon(Icons.add_a_photo),
+                              color: white,
+                            ),
+                          )
+                        ]),
+                      ),
 
-              // Benutzername
-              Container(
-                margin: const EdgeInsets.only(top: 8),
-                child: Text(
-                  userData['Benutzername'],
-                  textAlign: TextAlign
-                      .center, // Name muss aus der Datenbank geholt werden
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
+                      // Benutzername
+                      Container(
+                        margin: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          userData['Benutzername'],
+                          textAlign: TextAlign
+                              .center, // Name muss aus der Datenbank geholt werden
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
 
-              // Benutzer Geburtstag
-              MyTextBox(
-                sectionName: 'Geburtstag:',
-                text:
-                    '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
-                unit: '',
-                onPressed: () => editGeb(),
-              ),
+                      // Benutzer Geburtstag
+                      MyTextBox(
+                        sectionName: 'Geburtstag:',
+                        text:
+                            '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
+                        unit: '',
+                        onPressed: () => editGeb(),
+                      ),
 
-              // Benutzer Gewicht
-              MyTextBox(
-                sectionName: 'Gewicht:',
-                text: '80',
-                unit: 'kg',
-                onPressed: () => editField('Gewicht'),
-              ),
+                      // Benutzer Gewicht
+                      MyTextBox(
+                          sectionName: 'Gewicht:',
+                          text: gewicht.toString(),
+                          unit: 'kg',
+                          onPressed: () =>
+                              editField<int>(currentuser.uid, 'Gewicht').then(
+                                  (value) => setState(() => gewicht = value))),
 
-              // Benutzer Körpergröße
-              MyTextBox(
-                sectionName: 'Größe:',
-                text: '180',
-                unit: 'cm',
-                onPressed: () => editField('Größe'),
-              ),
+                      // Benutzer Körpergröße
+                      MyTextBox(
+                        sectionName: 'Größe:',
+                        text: groesse.toString(),
+                        unit: 'cm',
+                        onPressed: () => editField<int>(
+                                currentuser.uid, 'Größe')
+                            .then((value) => setState(() => groesse = value)),
+                      ),
 
-              // Benutzer Email
-              MyTextBox(
-                sectionName: 'Email:',
-                text: userData['Email'],
-                unit: '',
-                onPressed: () => editField('Email'),
-              ),
+                      // Benutzer Email
+                      MyTextBox(
+                        sectionName: 'Email:',
+                        text: email,
+                        unit: '',
+                        onPressed: () =>
+                            editField<String>(currentuser.uid, 'Email')
+                                .then((value) => setState(() => email = value)),
+                      ),
 
-              // Passwort ändern
-              Container(
-                margin: const EdgeInsets.only(left: 20, top: 32, right: 20),
-                child: ElevatedButton(
-                    onPressed: newPassword,
-                    style: buttonPrimary,
-                    child: Text(
-                      'Passwort ändern',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    )),
-              ),
-            ]);
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error${snapshot.error}'),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+                      // Passwort ändern
+                      Container(
+                        margin:
+                            const EdgeInsets.only(left: 20, top: 32, right: 20),
+                        child: ElevatedButton(
+                            onPressed: newPassword,
+                            style: buttonPrimary,
+                            child: Text(
+                              'Passwort ändern',
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            )),
+                      ),
+                    ]);
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error${snapshot.error}'),
+                    );
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              );
+            }
+          }),
     );
   }
 }

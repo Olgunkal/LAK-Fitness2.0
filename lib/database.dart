@@ -25,15 +25,7 @@ class Database {
   Stream getGroesse() {
     return nutzer.doc(currentuser).snapshots();
   }
-  //Future updateGroesse(double groesse) async{
-  //  await
-  //}
 }
-//body: StreamBuilder<DocumentSnapshot>(
-//    stream: Database().nutzer.doc(currentuser.uid).snapshots(),
-//  builder: (context, snapshot) {
-//   if (snapshot.hasData) {
-//    final userData = snapshot.data!.data() as Map<String, dynamic>;
 
 Future<void> connectToFirebase() async {
   Database database = Database();
