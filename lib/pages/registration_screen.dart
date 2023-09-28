@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../Database.dart';
 import '../loginAndRegistration/Textfield/my_textfield.dart';
 import '../loginAndRegistration/button/my_button.dart';
-import 'package:lak_fitness/Database.dart';
 
 import '../services/database_service.dart';
 import '../services/dialog_service.dart';

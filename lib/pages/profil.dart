@@ -8,7 +8,6 @@ import 'package:lak_fitness/styles/color.dart';
 import 'package:lak_fitness/styles/text_box.dart';
 import 'package:lak_fitness/styles/utils.dart';
 import 'package:lak_fitness/styles/change_password.dart';
-import 'package:lak_fitness/Database.dart';
 
 import '../services/database_service.dart';
 import '../services/dialog_service.dart';
@@ -149,141 +148,133 @@ class _ProfilState extends State<Profil> {
         ],
       ),
       body: FutureBuilder(
-          future: connectToFirebase(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else {
-              return StreamBuilder<DocumentSnapshot>(
-                stream: DatabaseService()
-                    .userCollection
-                    .doc(currentuser.uid)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final userData =
-                        snapshot.data!.data() as Map<String, dynamic>;
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return StreamBuilder<DocumentSnapshot>(
+            stream: DatabaseService()
+                .userCollection
+                .doc(currentuser.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final userData = snapshot.data!.data() as Map<String, dynamic>;
 
-                    groesse = userData['Größe'];
-                    gewicht = userData['Gewicht'];
-                    email = userData['Email'];
+                groesse = userData['Größe'];
+                gewicht = userData['Gewicht'];
+                email = userData['Email'];
 
-                    return ListView(children: [
-                      // Profilbild
-                      Container(
-                        alignment: Alignment.center,
-                        margin:
-                            const EdgeInsets.only(top: 10, left: 20, right: 20),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: purple,
-                            width: 2,
-                          ),
-                        ),
-                        child: Stack(children: [
-                          image != null
-                              ? CircleAvatar(
-                                  radius: 50,
-                                  child: ClipOval(
-                                    child: Image.memory(image!,
-                                        width: 150,
-                                        height: 150,
-                                        fit: BoxFit.cover),
-                                  ),
-                                )
-                              : const Icon(
-                                  Icons.account_circle,
-                                  size: 100.0,
-                                ),
-                          Positioned(
-                            bottom: -15,
-                            left: 65,
-                            child: IconButton(
-                              onPressed: selectImage,
-                              icon: const Icon(Icons.add_a_photo),
-                              color: white,
+                return ListView(children: [
+                  // Profilbild
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: purple,
+                        width: 2,
+                      ),
+                    ),
+                    child: Stack(children: [
+                      image != null
+                          ? CircleAvatar(
+                              radius: 50,
+                              child: ClipOval(
+                                child: Image.memory(image!,
+                                    width: 150, height: 150, fit: BoxFit.cover),
+                              ),
+                            )
+                          : const Icon(
+                              Icons.account_circle,
+                              size: 100.0,
                             ),
-                          )
-                        ]),
-                      ),
-
-                      // Benutzername
-                      Container(
-                        margin: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          userData['Benutzername'],
-                          textAlign: TextAlign
-                              .center, // Name muss aus der Datenbank geholt werden
-                          style: Theme.of(context).textTheme.titleMedium,
+                      Positioned(
+                        bottom: -15,
+                        left: 65,
+                        child: IconButton(
+                          onPressed: selectImage,
+                          icon: const Icon(Icons.add_a_photo),
+                          color: white,
                         ),
-                      ),
+                      )
+                    ]),
+                  ),
 
-                      // Benutzer Geburtstag
-                      MyTextBox(
-                        sectionName: 'Geburtstag:',
-                        text:
-                            '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
-                        unit: '',
-                        onPressed: () => DialogService(context)
-                            .date(geb)
-                            .then((value) => setState(() => geb = value)),
-                      ),
+                  // Benutzername
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      userData['Benutzername'],
+                      textAlign: TextAlign
+                          .center, // Name muss aus der Datenbank geholt werden
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
 
-                      // Benutzer Gewicht
-                      MyTextBox(
-                          sectionName: 'Gewicht:',
-                          text: gewicht.toString(),
-                          unit: 'kg',
-                          onPressed: () =>
-                              editField<int>(currentuser.uid, 'Gewicht').then(
-                                  (value) => setState(() => gewicht = value))),
+                  // Benutzer Geburtstag
+                  MyTextBox(
+                    sectionName: 'Geburtstag:',
+                    text:
+                        '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
+                    unit: '',
+                    onPressed: () => DialogService(context)
+                        .date(geb)
+                        .then((value) => setState(() => geb = value)),
+                  ),
 
-                      // Benutzer Körpergröße
-                      MyTextBox(
-                        sectionName: 'Größe:',
-                        text: groesse.toString(),
-                        unit: 'cm',
-                        onPressed: () => editField<int>(
-                                currentuser.uid, 'Größe')
-                            .then((value) => setState(() => groesse = value)),
-                      ),
+                  // Benutzer Gewicht
+                  MyTextBox(
+                      sectionName: 'Gewicht:',
+                      text: gewicht.toString(),
+                      unit: 'kg',
+                      onPressed: () => editField<int>(
+                              currentuser.uid, 'Gewicht')
+                          .then((value) => setState(() => gewicht = value))),
 
-                      // Benutzer Email
-                      MyTextBox(
-                        sectionName: 'Email:',
-                        text: email,
-                        unit: '',
-                        onPressed: () =>
-                            editField<String>(currentuser.uid, 'Email')
-                                .then((value) => setState(() => email = value)),
-                      ),
+                  // Benutzer Körpergröße
+                  MyTextBox(
+                    sectionName: 'Größe:',
+                    text: groesse.toString(),
+                    unit: 'cm',
+                    onPressed: () => editField<int>(currentuser.uid, 'Größe')
+                        .then((value) => setState(() => groesse = value)),
+                  ),
 
-                      // Passwort ändern
-                      Container(
-                        margin:
-                            const EdgeInsets.only(left: 20, top: 32, right: 20),
-                        child: ElevatedButton(
-                            onPressed: newPassword,
-                            style: buttonPrimary,
-                            child: Text(
-                              'Passwort ändern',
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            )),
-                      ),
-                    ]);
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error${snapshot.error}'),
-                    );
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
+                  // Benutzer Email
+                  MyTextBox(
+                    sectionName: 'Email:',
+                    text: email,
+                    unit: '',
+                    onPressed: () => editField<String>(currentuser.uid, 'Email')
+                        .then((value) => setState(() => email = value)),
+                  ),
+
+                  // Passwort ändern
+                  Container(
+                    margin: const EdgeInsets.only(left: 20, top: 32, right: 20),
+                    child: ElevatedButton(
+                        onPressed: newPassword,
+                        style: buttonPrimary,
+                        child: Text(
+                          'Passwort ändern',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        )),
+                  ),
+                ]);
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error${snapshot.error}'),
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            }
-          }),
+            },
+          );
+        }
+      }),
     );
   }
 }
