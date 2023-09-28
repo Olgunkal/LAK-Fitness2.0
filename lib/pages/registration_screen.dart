@@ -1,12 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../loginAndRegistration/Textfield/my_textfield.dart';
 import '../loginAndRegistration/button/my_button.dart';
 
-class RegistrationScreen extends StatelessWidget {
+class RegistrationScreen extends StatefulWidget {
   final Function()? onTap;
   const RegistrationScreen({super.key, required this.onTap});
 
+  @override
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
+}
+
+class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     // text editing Controller
@@ -15,51 +21,28 @@ class RegistrationScreen extends StatelessWidget {
     final passwordController = TextEditingController();
     final confirmPasswordCo1ntroller = TextEditingController();
 
-    void showErrorMessage(String message) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.purple,
-            title: Center(
-                child: Text(
-              message,
-              style: TextStyle(color: Colors.white),
-            )),
-          );
-        },
-      );
+    bool passwordConfirmed() {
+      if (passwordController.text == confirmPasswordCo1ntroller.text) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    Future addUserDetails(String username, String email) async {
+      await FirebaseFirestore.instance.collection('users').add({
+        'Benutzername': username,
+        'Email': email,
+      });
     }
 
     //Registration User
-    void registrationUser() async {
-      //show loading cirle
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          );
-        },
-      );
-
-      // check both passwords
-      if (passwordController.text.length <= 5) {
-        Navigator.pop(context);
-        showErrorMessage("Passwort zu kurz!");
-        return;
-      } else if (passwordController.text != confirmPasswordCo1ntroller.text) {
-        Navigator.pop(context);
-        showErrorMessage("Passwörter stimmen nicht überein!");
-        return;
-      } else if (passwordController.text == confirmPasswordCo1ntroller.text) {
+    Future registrationUser() async {
+      if (passwordConfirmed()) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-        Navigator.pop(context);
+            email: emailController.text, password: passwordController.text);
+        //add user data
+        addUserDetails(usernameController.text, emailController.text);
       }
     }
 
@@ -173,7 +156,7 @@ class RegistrationScreen extends StatelessWidget {
                       Text('Schon Registriert? ',
                           style: TextStyle(color: Colors.white)),
                       GestureDetector(
-                        onTap: onTap,
+                        onTap: widget.onTap,
                         child: Text(
                           'Jetzt Anmelden!',
                           style: TextStyle(color: (Colors.blue)),
