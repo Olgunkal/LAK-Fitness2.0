@@ -11,6 +11,7 @@ import 'package:lak_fitness/styles/change_password.dart';
 import 'package:lak_fitness/Database.dart';
 
 import '../services/database_service.dart';
+import '../services/dialog_service.dart';
 
 class Profil extends StatefulWidget {
   const Profil({super.key});
@@ -25,8 +26,6 @@ class _ProfilState extends State<Profil> {
   var geb = DateTime.now();
   var groesse = 0;
   var email = "";
-  var startZeitraum = DateTime(2021);
-  var endeZeitraum = DateTime(2500);
 
   // user
   //final currentUser = FirebaseAuth.instance.currentUser!;
@@ -124,67 +123,6 @@ class _ProfilState extends State<Profil> {
     //if (newValue.trim().length > 0) {
     // await usersCollection.doc(currentUser.email).update({field: newValue});
     //}
-  }
-
-  Future<void> editGeb() async {
-    await showDatePicker(
-      context: context,
-      helpText: 'wähle Geburtsdatum aus',
-      cancelText: 'Abbrechen',
-      confirmText: 'Speichern',
-      fieldLabelText: 'Geburtsdatum',
-      initialDate: geb,
-      firstDate: startZeitraum,
-      lastDate: endeZeitraum,
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme(
-              brightness: Brightness.dark,
-              surface: purple,
-              background: background,
-              error: Colors.red[400]!,
-              primary: white,
-              secondary: purple,
-              onSurface: white,
-              onBackground: purple,
-              onError: white,
-              onPrimary: purple,
-              onSecondary: white,
-            ),
-            textTheme: TextTheme(
-              bodySmall: TextStyle(
-                fontFamily: 'Red Hat Displays',
-                fontSize: 14,
-                color: white,
-              ),
-              labelSmall: TextStyle(
-                fontFamily: 'Red Hat Displays',
-                fontSize: 14,
-                color: white,
-              ),
-              labelLarge: TextStyle(
-                fontFamily: 'Red Hat Displays',
-                fontSize: 16,
-                color: white,
-              ),
-            ),
-            textButtonTheme: buttonDatepicker,
-          ),
-          child: child!,
-        );
-      },
-    ).then(
-      (value) {
-        if (value != null) {
-          // Datenbankeinbindung write und update
-
-          setState(() {
-            geb = value;
-          });
-        }
-      },
-    );
   }
 
   // sign out
@@ -287,7 +225,9 @@ class _ProfilState extends State<Profil> {
                         text:
                             '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
                         unit: '',
-                        onPressed: () => editGeb(),
+                        onPressed: () => DialogService(context)
+                            .date(geb)
+                            .then((value) => setState(() => geb = value)),
                       ),
 
                       // Benutzer Gewicht

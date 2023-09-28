@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../models/training_plan.dart';
+import '../services/database_service.dart';
 import '../sts_listelement.dart';
 
 class Startseite extends StatefulWidget {
@@ -11,13 +13,27 @@ class Startseite extends StatefulWidget {
 
 class _StartseiteState extends State<Startseite> {
   // Temporäre Schnittstelle
-  List<String> trainingsplaene = ['Bauch', 'Arme', 'Beine'];
+  List<String> trainingsplaene = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var result = await DatabaseService().getTrainingPlans();
+      setState(() {
+        trainingsplaene = result.map((x) => x.name).toList();
+      });
+    });
+  }
 
   //Neuen Trainingsplan hinzufügen
-  void trainingsplanHinzufuegen(String trainingsplan) {
+  Future trainingsplanHinzufuegen(String name) async {
+    await DatabaseService().createTrainingPlan(TrainingPlan(name: name));
+
     setState(() {
-      if (trainingsplan != "") {
-        trainingsplaene.add(trainingsplan);
+      if (name != "") {
+        trainingsplaene.add(name);
         Navigator.pop(context);
       }
     });

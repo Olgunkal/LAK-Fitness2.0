@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../styles/button.dart';
+import '../styles/color.dart';
+
 class DialogService {
   final BuildContext context;
 
@@ -29,6 +32,57 @@ class DialogService {
             message,
             style: const TextStyle(color: Colors.white),
           )),
+        );
+      },
+    );
+  }
+
+  Future date(DateTime initial) async {
+    return await showDatePicker(
+      context: context,
+      helpText: 'wähle Geburtsdatum aus',
+      cancelText: 'Abbrechen',
+      confirmText: 'Speichern',
+      fieldLabelText: 'Geburtsdatum',
+      initialDate: initial,
+      firstDate: DateTime(2021),
+      lastDate: DateTime(2500),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme(
+              brightness: Brightness.dark,
+              surface: purple,
+              background: background,
+              error: Colors.red[400]!,
+              primary: white,
+              secondary: purple,
+              onSurface: white,
+              onBackground: purple,
+              onError: white,
+              onPrimary: purple,
+              onSecondary: white,
+            ),
+            textTheme: TextTheme(
+              bodySmall: TextStyle(
+                fontFamily: 'Red Hat Displays',
+                fontSize: 14,
+                color: white,
+              ),
+              labelSmall: TextStyle(
+                fontFamily: 'Red Hat Displays',
+                fontSize: 14,
+                color: white,
+              ),
+              labelLarge: TextStyle(
+                fontFamily: 'Red Hat Displays',
+                fontSize: 16,
+                color: white,
+              ),
+            ),
+            textButtonTheme: buttonDatepicker,
+          ),
+          child: child!,
         );
       },
     );
