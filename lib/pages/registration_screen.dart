@@ -29,6 +29,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     }
 
+    void showErrorMessage(String message) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.purple,
+            title: Center(
+                child: Text(
+              message,
+              style: TextStyle(color: Colors.white),
+            )),
+          );
+        },
+      );
+    }
+
     Future addUserDetails(String username, String email) async {
       await FirebaseFirestore.instance.collection('users').add({
         'Benutzername': username,
@@ -38,11 +54,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     //Registration User
     Future registrationUser() async {
-      if (passwordConfirmed()) {
+      //show loading cirle
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          );
+        },
+      );
+
+      if (passwordController.text.length <= 5) {
+        Navigator.pop(context);
+        showErrorMessage("Passwort zu kurz!");
+        return;
+      } else if (!passwordConfirmed()) {
+        Navigator.pop(context);
+        showErrorMessage("Passwörter stimmen nicht überein!");
+        return;
+      } else if (passwordConfirmed()) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text);
-        //add user data
+          email: emailController.text,
+          password: passwordController.text,
+        );
         addUserDetails(usernameController.text, emailController.text);
+        Navigator.pop(context);
       }
     }
 
