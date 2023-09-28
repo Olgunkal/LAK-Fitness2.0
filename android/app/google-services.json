@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "252637498518",
+    "project_id": "lak-fitness-2",
+    "storage_bucket": "lak-fitness-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252637498518:android:ddf67b354b05279c7346b7",
+        "android_client_info": {
+          "package_name": "com.example.lak_fitness"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrQorAGSH4Ipkbv8fXWOphjIURSLbPNvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
