@@ -9,6 +9,7 @@ import 'package:lak_fitness/styles/text_box.dart';
 import 'package:lak_fitness/styles/utils.dart';
 import 'package:lak_fitness/styles/change_password.dart';
 
+import '../models/user.dart';
 import '../services/database_service.dart';
 import '../services/dialog_service.dart';
 
@@ -20,11 +21,13 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-  // Variablen Dekleartion
-  var gewicht = 0;
-  var geb = DateTime.now();
-  var groesse = 0;
-  var email = "";
+  LakUser user = LakUser(
+      email: "",
+      username: "",
+      birthday: DateTime.now(),
+      weight: 0,
+      height: 0,
+      plans: []);
 
   // user
   //final currentUser = FirebaseAuth.instance.currentUser!;
@@ -159,11 +162,8 @@ class _ProfilState extends State<Profil> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                final userData = snapshot.data!.data() as Map<String, dynamic>;
-
-                groesse = userData['Größe'];
-                gewicht = userData['Gewicht'];
-                email = userData['Email'];
+                user = LakUser.fromJson(
+                    snapshot.data!.data() as Map<String, dynamic>);
 
                 return ListView(children: [
                   // Profilbild
@@ -206,7 +206,7 @@ class _ProfilState extends State<Profil> {
                   Container(
                     margin: const EdgeInsets.only(top: 8),
                     child: Text(
-                      userData['Benutzername'],
+                      user!.username!,
                       textAlign: TextAlign
                           .center, // Name muss aus der Datenbank geholt werden
                       style: Theme.of(context).textTheme.titleMedium,
@@ -217,38 +217,57 @@ class _ProfilState extends State<Profil> {
                   MyTextBox(
                     sectionName: 'Geburtstag:',
                     text:
-                        '${geb.day.toString()}.${geb.month.toString()}.${geb.year.toString()}',
+                        '${user.birthday.day.toString()}.${user.birthday.month.toString()}.${user.birthday.year.toString()}',
                     unit: '',
-                    onPressed: () => DialogService(context)
-                        .date(geb)
-                        .then((value) => setState(() => geb = value)),
+                    onPressed: () => {
+                      DialogService(context)
+                          .date(user.birthday)
+                          .then((value) async => {
+                                setState(() =>
+                                    user.birthday = value ?? DateTime.now()),
+                                await DatabaseService()
+                                    .updateUserData(birthday: user.birthday)
+                              }),
+                    },
                   ),
 
                   // Benutzer Gewicht
                   MyTextBox(
                       sectionName: 'Gewicht:',
-                      text: gewicht.toString(),
+                      text: user.weight.toString(),
                       unit: 'kg',
-                      onPressed: () => editField<int>(
-                              currentuser.uid, 'Gewicht')
-                          .then((value) => setState(() => gewicht = value))),
+                      onPressed: () =>
+                          editField<int>(currentuser.uid, 'Gewicht')
+                              .then((value) async => {
+                                    setState(() => user.weight = value),
+                                    await DatabaseService()
+                                        .updateUserData(weight: user.weight)
+                                  })),
 
                   // Benutzer Körpergröße
                   MyTextBox(
                     sectionName: 'Größe:',
-                    text: groesse.toString(),
+                    text: user.height.toString(),
                     unit: 'cm',
                     onPressed: () => editField<int>(currentuser.uid, 'Größe')
-                        .then((value) => setState(() => groesse = value)),
+                        .then((value) async => {
+                              setState(() => user.height = value),
+                              await DatabaseService()
+                                  .updateUserData(height: user.height)
+                            }),
                   ),
 
                   // Benutzer Email
                   MyTextBox(
                     sectionName: 'Email:',
-                    text: email,
+                    text: user.email,
                     unit: '',
                     onPressed: () => editField<String>(currentuser.uid, 'Email')
-                        .then((value) => setState(() => email = value)),
+                        .then((value) async => {
+                              setState(() => user.email = value),
+                              await DatabaseService()
+                                  .updateUserData(email: user.email)
+                            }),
                   ),
 
                   // Passwort ändern

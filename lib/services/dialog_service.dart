@@ -37,7 +37,7 @@ class DialogService {
     );
   }
 
-  Future date(DateTime initial) async {
+  Future<DateTime?> date(DateTime initial) async {
     return await showDatePicker(
       context: context,
       helpText: 'wähle Geburtsdatum aus',
