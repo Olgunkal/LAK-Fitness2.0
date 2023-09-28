@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lak_fitness/loginAndRegistration/Textfield/my_textfield.dart';
 import 'package:lak_fitness/loginAndRegistration/button/my_button.dart';
 
+import '../services/dialog_service.dart';
+
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
   LoginScreen({super.key, required this.onTap});
@@ -12,9 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  //text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
 
   //sign  user
@@ -37,37 +37,18 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text,
       );
 
-      // loading circle pop
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      // loading circle pop
       Navigator.pop(context);
-      // wrong email
-      if (e.code == 'user-not-found') {
-        // show error
-        showErrorMessage('Falsche E-Mail');
-      }
-      // wrong password
-      else if (e.code == 'wrong-password') {
-        showErrorMessage('Falsches Passwort');
+
+      if (e.code == 'user-not-found' || e.code == 'invalid-email') {
+        await DialogService(context).error('Falsche E-Mail');
+      } else if (e.code == 'wrong-password') {
+        await DialogService(context).error('Falsches Passwort');
+      } else {
+        await DialogService(context).error('Falsches Passwort');
       }
     }
-  }
-
-  void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.purple,
-          title: Center(
-              child: Text(
-            message,
-            style: TextStyle(color: Colors.white),
-          )),
-        );
-      },
-    );
   }
 
   @override

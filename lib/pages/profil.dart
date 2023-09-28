@@ -10,6 +10,8 @@ import 'package:lak_fitness/styles/utils.dart';
 import 'package:lak_fitness/styles/change_password.dart';
 import 'package:lak_fitness/Database.dart';
 
+import '../services/database_service.dart';
+
 class Profil extends StatefulWidget {
   const Profil({super.key});
 
@@ -215,7 +217,10 @@ class _ProfilState extends State<Profil> {
               return const Center(child: CircularProgressIndicator());
             } else {
               return StreamBuilder<DocumentSnapshot>(
-                stream: Database().nutzer.doc(currentuser.uid).snapshots(),
+                stream: DatabaseService()
+                    .userCollection
+                    .doc(currentuser.uid)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final userData =

@@ -6,6 +6,9 @@ import '../loginAndRegistration/Textfield/my_textfield.dart';
 import '../loginAndRegistration/button/my_button.dart';
 import 'package:lak_fitness/Database.dart';
 
+import '../services/database_service.dart';
+import '../services/dialog_service.dart';
+
 class RegistrationScreen extends StatefulWidget {
   final Function()? onTap;
   const RegistrationScreen({super.key, required this.onTap});
@@ -17,64 +20,28 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
-    // text editing Controller
     final usernameController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-    final confirmPasswordCo1ntroller = TextEditingController();
+    final confirmPasswordController = TextEditingController();
 
-    bool passwordConfirmed() {
-      if (passwordController.text == confirmPasswordCo1ntroller.text) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    void showErrorMessage(String message) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.purple,
-            title: Center(
-                child: Text(
-              message,
-              style: TextStyle(color: Colors.white),
-            )),
-          );
-        },
-      );
-    }
-
-    //Registration User
-    Future registrationUser() async {
-      //show loading cirle
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          );
-        },
-      );
+    Future registerUser() async {
+      DialogService(context).progress();
 
       if (passwordController.text.length <= 5) {
         Navigator.pop(context);
-        showErrorMessage("Passwort zu kurz!");
+        DialogService(context).error("Passwort zu kurz!");
         return;
-      } else if (!passwordConfirmed()) {
+      } else if (passwordController.text != confirmPasswordController.text) {
         Navigator.pop(context);
-        showErrorMessage("Passwörter stimmen nicht überein!");
+        DialogService(context).error("Passwörter stimmen nicht überein!");
         return;
-      } else if (passwordConfirmed()) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-        Database().setBenutzer(usernameController.text, emailController.text);
+      }
+
+      try {
+        await DatabaseService().register(emailController.text,
+            usernameController.text, passwordController.text);
+      } finally {
         Navigator.pop(context);
       }
     }
@@ -175,7 +142,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                 ),
                 MyTextField(
-                  controller: confirmPasswordCo1ntroller,
+                  controller: confirmPasswordController,
                   hintText: 'Passwort erneut eingeben',
                   obscureText: true,
                 ),
@@ -202,7 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                 MyButton(
                   buttonText: 'registrieren',
-                  onTap: registrationUser,
+                  onTap: registerUser,
                 ),
               ],
             ),
