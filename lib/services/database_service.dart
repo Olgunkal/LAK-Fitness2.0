@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import '../models/current_exercise_state.dart';
 import '../models/exercise.dart';
+import '../models/training.dart';
 import '../models/training_plan.dart';
 import '../models/user.dart';
 
@@ -114,6 +115,29 @@ class DatabaseService {
                 LakUser.fromJson(snapshot.data()),
             toFirestore: (value, options) => value.toJson())
         .update({'Plans': List<dynamic>.from(plans.map((x) => x.toJson()))});
+  }
+
+  Future<void> checkoutExercise(CurrentExerciseState exerciseState) async {
+    var user = await getCurrentUser();
+
+    var training = Training(
+        date: DateTime.now(),
+        exercise: exerciseState.exercise.name,
+        weight: exerciseState.weight,
+        repetion: exerciseState.repetions,
+        sets: exerciseState.sets);
+
+    user.trainings.add(training);
+
+    await userCollection
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .withConverter(
+            fromFirestore: (snapshot, options) =>
+                LakUser.fromJson(snapshot.data()),
+            toFirestore: (value, options) => value.toJson())
+        .update({
+      'Trainings': List<dynamic>.from(user.trainings.map((x) => x.toJson()))
+    });
   }
 
   Future<void> addExerciseToPlan(String plan, Exercise exercise) async {

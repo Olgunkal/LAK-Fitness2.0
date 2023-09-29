@@ -38,7 +38,7 @@ class _TpListenelementState extends State<TpListenelement> {
               SlidableAction(
                   icon: Icons.check,
                   backgroundColor: Colors.green,
-                  onPressed: checkoutUebung())
+                  onPressed: (context) async => await checkoutExercise())
             ],
           ),
           endActionPane: ActionPane(
@@ -148,7 +148,12 @@ class _TpListenelementState extends State<TpListenelement> {
     );
   }
 
-  checkoutUebung() {}
+  Future<void> checkoutExercise() async {
+    await DatabaseService().checkoutExercise(widget.exerciseState);
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Übung wurde absolviert')));
+  }
 
   Future<void> removeExercise() async {
     await DatabaseService().removeExercise(

@@ -27,10 +27,8 @@ class _ProfilState extends State<Profil> {
       birthday: DateTime.now(),
       weight: 0,
       height: 0,
-      plans: []);
-
-  // user
-  //final currentUser = FirebaseAuth.instance.currentUser!;
+      plans: [],
+      trainings: []);
 
   void changePassword(String password) {
     Navigator.of(context).pop();
