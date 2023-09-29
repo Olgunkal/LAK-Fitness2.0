@@ -16,7 +16,7 @@ class UebungskatalogUebersicht extends StatefulWidget {
 
 class _UebungskatalogUebersichtState extends State<UebungskatalogUebersicht> {
   // Temporäre Schnittstelle
-  List<String> uebungskataloge = ['Bauch', 'Arme', 'Beine'];
+  List<String> uebungskataloge = ['Brust', 'Beine', 'Rücken', 'Arme', 'Bauch'];
   String ueberschriftUebungskatalogUebersicht = "Übungskataloge";
 
   @override
