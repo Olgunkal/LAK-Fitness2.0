@@ -43,6 +43,7 @@ dependencies:
   flutter_spinbox: ^0.13.1
   cloud_firestore: ^4.9.2
   intl: ^0.18.1
+  flutter_slidable: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinbox/flutter_spinbox.dart';
-import 'package:lak_fitness/basis_theme.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:lak_fitness/styles/color.dart';
+import 'basis_theme.dart';
 
 // Startseite Listenelement
 class TpListenelement extends StatefulWidget {
@@ -13,9 +15,9 @@ class TpListenelement extends StatefulWidget {
 }
 
 class _TpListenelementState extends State<TpListenelement> {
-  double _saetze = 0.0;
+  int _saetze = 0;
   int _wiederholungen = 0;
-  int _gewicht = 0;
+  double _gewicht = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,43 +29,115 @@ class _TpListenelementState extends State<TpListenelement> {
           border: Border(bottom: BorderSide(color: lila, width: 2.0))),
 
       // Listenelemente
-      child: ListTile(
-        title: Center(
+      child: Slidable(
+          startActionPane: ActionPane(
+            motion: ScrollMotion(),
+            children: [
+              SlidableAction(
+                  icon: Icons.check,
+                  backgroundColor: Colors.green,
+                  onPressed: checkoutUebung())
+            ],
+          ),
+          endActionPane: ActionPane(
+            motion: ScrollMotion(),
+            children: [
+              SlidableAction(
+                  icon: Icons.delete_forever,
+                  backgroundColor: Colors.red,
+                  onPressed: entferneUebung())
+            ],
+          ),
+          child: Center(
             child: ExpansionTile(
-          title: Center(
-              child: Text(
-            widget.uebungName,
-            style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.white),
+              title: Center(
+                  child: Text(
+                widget.uebungName,
+                style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
+              )),
+              trailing: const Text(""),
+              children: [
+                ListTile(
+                  title: const Text('Sätze'),
+                  trailing: Container(
+                      width: 50,
+                      margin: EdgeInsets.all(10),
+                      child: TextField(
+                        textAlign: TextAlign.center,
+                        textAlignVertical: TextAlignVertical.center,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: white)),
+                            hintText: _saetze.toString()),
+                        onChanged: (value) {
+                          setState(() {
+                            _saetze = int.parse(value);
+                          });
+                        },
+                      )),
+                ),
+                ListTile(
+                    title: Text('Wiederholungen'),
+                    trailing: Container(
+                        width: 50,
+                        margin: EdgeInsets.all(10),
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.center,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: white)),
+                              hintText: _wiederholungen.toString()),
+                          onChanged: (value) {
+                            setState(() {
+                              _wiederholungen = int.parse(value);
+                            });
+                          },
+                        ))),
+                ListTile(
+                    title: Text('Gewicht'),
+                    trailing: Container(
+                        width: 50,
+                        margin: EdgeInsets.all(10),
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          textAlignVertical: TextAlignVertical.center,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: white)),
+                            //hintText: (_gewicht as int).toString()
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _gewicht = double.parse(value);
+                            });
+                          },
+                        ))),
+              ],
+            ),
           )),
-          trailing: const Text(""),
-          collapsedBackgroundColor: grey,
-          children: [
-            ListTile(
-                title: const Text('Sätze'),
-                trailing: Container(
-                  width: 50,
-                  child: SpinBox(
-                    value: _saetze,
-                    onChanged: (double value) {
-                      setState(() {
-                        _saetze = value;
-                      });
-                    },
-                    decoration: const InputDecoration(),
-                  ),
-                )),
-            const ListTile(
-              title: Text('Wiederholungen'),
-            ),
-            const ListTile(
-              title: Text('Gewicht'),
-            ),
-          ],
-        )),
-      ),
     );
   }
+
+  checkoutUebung() {}
+
+  entferneUebung() {}
 }

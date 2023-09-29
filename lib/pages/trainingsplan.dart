@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lak_fitness/pages/uebungskatalog.dart';
+import 'uebungskatalog.dart';
 import '../tp_listelement.dart';
 
 // Startseite
