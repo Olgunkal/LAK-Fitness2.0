@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import '../props/trainingplan_props.dart';
 import '../ukuebersicht_listelement.dart';
 
 // Startseite
 class UebungskatalogUebersicht extends StatefulWidget {
+  final TrainingPlanProps props;
+
   //Konstruktor
-  const UebungskatalogUebersicht({super.key});
+  const UebungskatalogUebersicht({required this.props});
 
   @override
   State<UebungskatalogUebersicht> createState() =>
@@ -31,7 +34,7 @@ class _UebungskatalogUebersichtState extends State<UebungskatalogUebersicht> {
       body: ListView.builder(
           itemCount: uebungskataloge.length,
           itemBuilder: (context, i) {
-            return UkueListenelement(uebungskataloge[i]);
+            return UkueListenelement(widget.props, uebungskataloge[i]);
           }),
     );
   }

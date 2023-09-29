@@ -1,20 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/basis_theme.dart';
+import 'package:lak_fitness/pages/trainingsplan.dart';
+import 'package:lak_fitness/services/database_service.dart';
+import 'package:lak_fitness/uebung_definieren.dart';
+
+import 'models/exercise.dart';
 
 // Startseite Listenelement
 class UkuebungListenelement extends StatelessWidget {
   //Konstruktor
   final String uebungName;
-  const UkuebungListenelement(this.uebungName, {super.key});
+  final String trainingsplanName;
+
+  const UkuebungListenelement(this.trainingsplanName, this.uebungName,
+      {super.key});
 
   // Funktion Infotext anzeigen
-  void zeigeInfotxt() {}
 
   // Funktion Uebung zu Trainingsplan hinzufuegen
-  void fuegeUebunghinzu() {}
+  Future<void> addExercise(BuildContext context) async {
+    await DatabaseService().addExercise(
+        trainingsplanName, Exercise(name: uebungName, description: ''));
+
+    Navigator.pop(context);
+
+/*
+    Navigator.replace(ctx,
+        oldRoute: MaterialPageRoute<Widget>(
+            builder: (BuildContext context) =>
+                Trainingsplan(trainingsplanName: trainingsplanName)),
+        newRoute: MaterialPageRoute<Widget>(
+            builder: (BuildContext context) =>
+                Trainingsplan(trainingsplanName: trainingsplanName)));
+                */
+  }
 
   @override
   Widget build(BuildContext context) {
+    void zeigeInfotxt() {
+      Navigator.push<Widget>(
+          context,
+          MaterialPageRoute<Widget>(
+              builder: (BuildContext context) =>
+                  Uebung_definieren(uebungsName: uebungName)));
+    }
+
     return Container(
       //Layout
       padding: const EdgeInsets.symmetric(horizontal: 22),
@@ -38,7 +68,7 @@ class UkuebungListenelement extends StatelessWidget {
         ),
 
         trailing: IconButton(
-          onPressed: fuegeUebunghinzu,
+          onPressed: () => addExercise(context),
           icon: Icon(Icons.add_circle_outline_sharp),
         ),
       ),

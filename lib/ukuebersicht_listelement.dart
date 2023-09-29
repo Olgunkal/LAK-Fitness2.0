@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/basis_theme.dart';
 import 'package:lak_fitness/pages/uebungskatalog_uebungen.dart';
+import 'package:lak_fitness/props/trainingplan_props.dart';
 
 // Startseite Listenelement
 class UkueListenelement extends StatelessWidget {
-  //Konstruktor
   final String uebungskatalogName;
-  const UkueListenelement(this.uebungskatalogName, {super.key});
+  final TrainingPlanProps props;
+
+  const UkueListenelement(this.props, this.uebungskatalogName);
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class UkueListenelement extends StatelessWidget {
           context,
           MaterialPageRoute<Widget>(
               builder: (BuildContext context) => UebungskatalogUebungen(
+                  trainingsplanName: props.trainingPlanName,
                   uebungskatalogName: uebungskatalogName)));
     }
 

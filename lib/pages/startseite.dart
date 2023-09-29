@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/training_plan.dart';
+import '../props/trainingplan_props.dart';
 import '../services/database_service.dart';
 import '../sts_listelement.dart';
 
@@ -29,7 +30,8 @@ class _StartseiteState extends State<Startseite> {
 
   //Neuen Trainingsplan hinzufügen
   Future trainingsplanHinzufuegen(String name) async {
-    await DatabaseService().createTrainingPlan(TrainingPlan(name: name));
+    await DatabaseService()
+        .createTrainingPlan(TrainingPlan(name: name, exercises: []));
 
     setState(() {
       if (name != "") {
@@ -101,7 +103,8 @@ class _StartseiteState extends State<Startseite> {
       body: ListView.builder(
           itemCount: trainingsplaene.length,
           itemBuilder: (context, i) {
-            return StsListenelement(trainingsplaene[i]);
+            return StsListenelement(
+                TrainingPlanProps(trainingPlanName: trainingsplaene[i]));
           }),
     );
   }

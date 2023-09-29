@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/basis_theme.dart';
 import 'package:lak_fitness/pages/trainingsplan.dart';
+import 'package:lak_fitness/props/trainingplan_props.dart';
 
 // Startseite Listenelement
 class StsListenelement extends StatelessWidget {
   //Konstruktor
-  final String trainingsplanName;
-  const StsListenelement(this.trainingsplanName, {super.key});
+  final TrainingPlanProps props;
+
+  const StsListenelement(this.props, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +16,9 @@ class StsListenelement extends StatelessWidget {
       Navigator.push<Widget>(
           context,
           MaterialPageRoute<Widget>(
-              builder: (BuildContext context) =>
-                  Trainingsplan(trainingsplanName: trainingsplanName)));
+              builder: (BuildContext context) => Trainingsplan(
+                  props: TrainingPlanProps(
+                      trainingPlanName: props.trainingPlanName))));
     }
 
     return Container(
@@ -29,7 +32,7 @@ class StsListenelement extends StatelessWidget {
       child: ListTile(
         title: Center(
           child: Text(
-            trainingsplanName,
+            props.trainingPlanName,
             style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w600,

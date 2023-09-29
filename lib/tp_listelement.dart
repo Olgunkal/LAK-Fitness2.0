@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:lak_fitness/services/database_service.dart';
 import 'package:lak_fitness/styles/color.dart';
 import 'basis_theme.dart';
 
 // Startseite Listenelement
 class TpListenelement extends StatefulWidget {
-  //Konstruktor
   final String uebungName;
-  const TpListenelement(this.uebungName, {super.key});
+  final String trainingsplanName;
+  final Function() onRemoved;
+
+  const TpListenelement(this.trainingsplanName, this.uebungName, this.onRemoved,
+      {super.key});
 
   @override
   State<TpListenelement> createState() => _TpListenelementState();
@@ -45,7 +49,8 @@ class _TpListenelementState extends State<TpListenelement> {
               SlidableAction(
                   icon: Icons.delete_forever,
                   backgroundColor: Colors.red,
-                  onPressed: entferneUebung())
+                  onPressed: (context) async =>
+                      await entferneUebung(widget.uebungName))
             ],
           ),
           child: Center(
@@ -139,5 +144,10 @@ class _TpListenelementState extends State<TpListenelement> {
 
   checkoutUebung() {}
 
-  entferneUebung() {}
+  Future<void> entferneUebung(String name) async {
+    await DatabaseService()
+        .removeExercise(widget.trainingsplanName, widget.uebungName);
+
+    widget.onRemoved();
+  }
 }

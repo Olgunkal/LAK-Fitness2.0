@@ -6,9 +6,11 @@ import 'neuUebung.dart';
 class UebungskatalogUebungen extends StatefulWidget {
   //Überschirft mit Name des Übungskatalogs
   final String uebungskatalogName;
+  final String trainingsplanName;
 
   //Konstruktor
-  UebungskatalogUebungen({required this.uebungskatalogName});
+  UebungskatalogUebungen(
+      {required this.trainingsplanName, required this.uebungskatalogName});
 
   @override
   State<UebungskatalogUebungen> createState() => _UebungskatalogUebungenState();
@@ -49,7 +51,8 @@ class _UebungskatalogUebungenState extends State<UebungskatalogUebungen> {
       body: ListView.builder(
           itemCount: uebungskataloge.length,
           itemBuilder: (context, i) {
-            return UkuebungListenelement(uebungskataloge[i]);
+            return UkuebungListenelement(
+                widget.trainingsplanName, uebungskataloge[i]);
           }),
     );
   }
