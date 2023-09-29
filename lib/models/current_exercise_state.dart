@@ -1,5 +1,6 @@
 import 'exercise.dart';
 
+// Akutelle Übungen die im Trainingsplan sind
 class CurrentExerciseState {
   Exercise exercise;
   int weight;

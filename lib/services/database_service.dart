@@ -12,12 +12,13 @@ import '../models/training_plan.dart';
 import '../models/user.dart';
 
 class DatabaseService {
-  // final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  //Definition Pfad
   final userCollection = FirebaseFirestore.instance.collection('Nutzer');
   final exerciseCollection = FirebaseFirestore.instance.collection('Uebung');
   final trainingCatalogCollection =
       FirebaseFirestore.instance.collection('Uebungskatalog');
 
+  //Funktion Regisitrierung in Datenbank
   Future register(String email, String username, String password) async {
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
@@ -33,6 +34,7 @@ class DatabaseService {
     });
   }
 
+  // Funktion hinzufügen Trainingsplan in die Datenbank
   Future<List<TrainingPlan>> appendTrainingPlan(TrainingPlan entity) async {
     var user = await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -56,6 +58,7 @@ class DatabaseService {
     return plans;
   }
 
+  // Funktion Aktualisieren Geburtsdatum in Datenbank
   Future updateBirthday(DateTime date) async {
     await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -66,6 +69,7 @@ class DatabaseService {
         .update({'Geburtsdatum': DateFormat('yyyy-MM-dd').format(date)});
   }
 
+  // Funktion Aktualisierung Datenfelder in User-Dokument
   Future updateUserData(
       {DateTime? birthday, int? weight, int? height, String? email}) async {
     Map<Object, Object> update = {};
@@ -95,6 +99,7 @@ class DatabaseService {
         .update(update);
   }
 
+  // Funktion Löschen Übung aus Trainingsplan
   Future<void> removeExercise(String id, String exercise) async {
     var user = await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -118,6 +123,7 @@ class DatabaseService {
         .update({'Plans': List<dynamic>.from(plans.map((x) => x.toJson()))});
   }
 
+  // Funktion Training absolvieren
   Future<void> checkoutExercise(CurrentExerciseState exerciseState) async {
     var user = await getCurrentUser();
 
@@ -141,6 +147,7 @@ class DatabaseService {
     });
   }
 
+  // Funktion Hinzufügen einer Übung zu einem Trainingsplan
   Future<void> addExerciseToPlan(String plan, Exercise exercise) async {
     var user = await getCurrentUser();
 
@@ -162,6 +169,7 @@ class DatabaseService {
             {'Plans': List<dynamic>.from(user.plans.map((x) => x.toJson()))});
   }
 
+  // Funktion Aktualisierung Übungsstatus
   Future<void> updateExerciseState(
       String planName, CurrentExerciseState exerciseState) async {
     var user = await getCurrentUser();
@@ -184,6 +192,7 @@ class DatabaseService {
             {'Plans': List<dynamic>.from(user.plans.map((x) => x.toJson()))});
   }
 
+  // Funktion Erstellen einer Übung
   Future<Exercise> createExercise(
       String name, String description, String catalog) async {
     var entity = Exercise(
@@ -202,17 +211,20 @@ class DatabaseService {
     return entity;
   }
 
+  // Funktion Lesen Training
   Future<List<Training>> getTrainingsByName(String name) async {
     var user = await getCurrentUser();
 
     return user.trainings.toList();
   }
 
+  // Funktion Lesen Trainingsplan
   Future<TrainingPlan> getTrainingPlan(String name) async {
     final user = await getCurrentUser();
     return user.plans.firstWhere((element) => element.name == name);
   }
 
+  // Funktion Lesen Übung aus Katalog
   Future<List<Exercise>> getExercisesByCatalog(String catalog) async {
     var result = await exerciseCollection
         .withConverter<Exercise>(
@@ -225,6 +237,7 @@ class DatabaseService {
     return result.docs.map((e) => e.data()).toList();
   }
 
+  //Funktion Übung aus Trainingsplan legen
   Future<List<CurrentExerciseState>> getExercisesByPlan(String id) async {
     var user = await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -242,6 +255,7 @@ class DatabaseService {
     return found.first.exerciseStates.toList();
   }
 
+  //Funktion Lesen Übung
   Future<List<Exercise>> getExercises() async {
     var result = await exerciseCollection
         .withConverter<Exercise>(
@@ -253,6 +267,7 @@ class DatabaseService {
     return result.docs.map((e) => e.data()).toList();
   }
 
+  //Funktion Lesen Trainingsplan
   Future<List<TrainingPlan>> getTrainingPlans() async {
     var user = await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -265,6 +280,7 @@ class DatabaseService {
     return user.data()!.plans;
   }
 
+  //Funktion Aktuellen User auslesen
   Future<LakUser> getCurrentUser() async {
     var user = await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)

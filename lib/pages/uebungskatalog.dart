@@ -7,7 +7,7 @@ class UebungskatalogUebersicht extends StatefulWidget {
   final TrainingPlanProps props;
 
   //Konstruktor
-  const UebungskatalogUebersicht({required this.props});
+  const UebungskatalogUebersicht({super.key, required this.props});
 
   @override
   State<UebungskatalogUebersicht> createState() =>
@@ -15,7 +15,7 @@ class UebungskatalogUebersicht extends StatefulWidget {
 }
 
 class _UebungskatalogUebersichtState extends State<UebungskatalogUebersicht> {
-  // Temporäre Schnittstelle
+  // Katalogenliste
   List<String> uebungskataloge = ['Brust', 'Beine', 'Rücken', 'Arme', 'Bauch'];
   String ueberschriftUebungskatalogUebersicht = "Übungskataloge";
 

@@ -8,6 +8,7 @@ class DialogService {
 
   DialogService(this.context);
 
+  // Dialog mit Ladekreis
   Future progress() async {
     await showDialog(
       context: context,

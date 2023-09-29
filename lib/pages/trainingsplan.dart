@@ -10,7 +10,7 @@ class Trainingsplan extends StatefulWidget {
   final TrainingPlanProps props;
 
   //Konstruktor
-  Trainingsplan({required this.props});
+  const Trainingsplan({super.key, required this.props});
 
   @override
   State<Trainingsplan> createState() => _TrainingsplanState();
@@ -18,8 +18,8 @@ class Trainingsplan extends StatefulWidget {
 
 class _TrainingsplanState extends State<Trainingsplan> {
   List<CurrentExerciseState> exerciseStates = [];
-
-  void neuUebungHinzufuegen() {
+// Übungskatalog öffnen
+  void openCatalog() {
     Navigator.push<Widget>(
         context,
         MaterialPageRoute<Widget>(
@@ -61,17 +61,17 @@ class _TrainingsplanState extends State<Trainingsplan> {
         title: Text(widget.props.trainingPlanName,
             style: Theme.of(context).textTheme.headlineMedium),
 
-        //Button
+        //Button zum öffnen des Katalogs
         actions: [
           IconButton(
-            onPressed: neuUebungHinzufuegen,
+            onPressed: openCatalog,
             icon: const Icon(Icons.add_circle),
             style: Theme.of(context).iconButtonTheme.style,
           )
         ],
       ),
 
-      // Body
+      // Liste der hinzugefügten Übungen
       body: ListView.builder(
           itemCount: exerciseStates.length,
           itemBuilder: (context, i) {

@@ -20,7 +20,7 @@ class LakUser {
       required this.height,
       required this.plans,
       required this.trainings});
-
+  // Erstellung der Sammlung in der Datenbank
   LakUser.fromJson(Map<String, dynamic>? json)
       : this(
             email: json!['Email'],
@@ -32,7 +32,7 @@ class LakUser {
                 json['Plans'].map((x) => TrainingPlan.fromJson(x))),
             trainings: List<Training>.from(
                 json['Trainings'].map((x) => Training.fromJson(x))));
-
+  // füllen der Werte der Felder in der Datenbank
   Map<String, dynamic> toJson() {
     return {
       'Email': email,
@@ -40,7 +40,7 @@ class LakUser {
       'Geburtsdatum': DateFormat('yyyy-MM-dd').format(birthday),
       'Gewicht': weight,
       'Größe': height,
-      'Plans': List<dynamic>.from(plans!.map((x) => x.toJson())),
+      'Plans': List<dynamic>.from(plans.map((x) => x.toJson())),
       'Trainings': List<dynamic>.from(trainings.map((x) => x.toJson()))
     };
   }

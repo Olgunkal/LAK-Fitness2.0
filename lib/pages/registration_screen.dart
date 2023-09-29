@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../loginAndRegistration/Textfield/my_textfield.dart';
 import '../loginAndRegistration/button/my_button.dart';
 
@@ -48,14 +47,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
 
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 43, 41, 41),
+        backgroundColor: const Color.fromARGB(255, 43, 41, 41),
         body: SafeArea(
             child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 // Titel
-                Text(
+                const Text(
                   'Registrierung',
                   style: TextStyle(
                     color: Colors.white,
@@ -152,15 +151,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 const SizedBox(height: 10),
                 // Kein Konto -> weiterleitung Regristration Text
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Schon Registriert? ',
+                      const Text('Schon Registriert? ',
                           style: TextStyle(color: Colors.white)),
                       GestureDetector(
                         onTap: widget.onTap,
-                        child: Text(
+                        child: const Text(
                           'Jetzt Anmelden!',
                           style: TextStyle(color: (Colors.blue)),
                         ),

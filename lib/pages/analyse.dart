@@ -16,9 +16,11 @@ class Analysebildschirm extends StatefulWidget {
 }
 
 class _AnalysebildschirmState extends State<Analysebildschirm> {
+  // Default Wert für Analyse
   String selectedAnalysisType = "Gewicht";
   String? selectedExercise;
 
+  //Möglichkeiten der Kategorien nach denen gefiltert werden kann
   List<String> availableAnalysisType = <String>[
     "Gewicht",
     "Sätze",
@@ -28,15 +30,21 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
   List<String> exercises = <String>[];
   List<FlSpot> data = [];
 
+  //Defaultwerte Filter-Datum
   List<String> letzteDaten = <String>[
     DateTime(2022, 01, 01).toString(),
     DateTime(2023, 01, 01).toString()
   ];
 
+  var _datumVon = DateTime(2022, 09, 01);
+  var _datumBis = DateTime.now();
+
+  //Initialisierung des Status
   @override
   void initState() {
     super.initState();
 
+    //Aktualisierung bei der Übung aus der Datenbank gelesen werden
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var result = await DatabaseService().getExercises();
 
@@ -45,9 +53,7 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
     });
   }
 
-  var _datumVon = DateTime(2022, 09, 01);
-  var _datumBis = DateTime.now();
-
+  //Funktioenn zum updaten des Datums
   void updateDatumVon(neuesDatum) {
     if (neuesDatum != null) {
       setState(() {
@@ -61,19 +67,14 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
       setState(() {
         _datumBis = neuesDatum;
       });
-      print((((_datumBis.millisecondsSinceEpoch.toDouble() -
-                          _datumVon.millisecondsSinceEpoch.toDouble()) /
-                      86400000.0) /
-                  2)
-              .round()
-              .toDouble() +
-          1);
     }
   }
 
+  //Anfrage der Trainingsdaten des aktuellen Nutzers aus der Datenbank
   Future<void> updateData() async {
     var result = await DatabaseService().getTrainingsByName(selectedExercise!);
 
+    // Abfrage Gewicht
     if (selectedAnalysisType == 'Gewicht') {
       setState(() {
         data = result
@@ -82,6 +83,8 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                 e.weight.toDouble()))
             .toList();
       });
+
+      // Abfrage Sätze
     } else if (selectedAnalysisType == 'Sätze') {
       setState(() {
         data = result
@@ -90,6 +93,8 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                 e.sets.toDouble()))
             .toList();
       });
+
+      //Abfrage Wiederholung
     } else if (selectedAnalysisType == 'Wiederholungen') {
       setState(() {
         data = result
@@ -103,26 +108,35 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
 
   @override
   Widget build(BuildContext context) {
+    //Layoutbreite (aus basis_theme.dart)
     var breite = breiteContainer;
-    var _startZeitraum = DateTime(2021); //Zeitpunkt Installation App
-    var _endeZeitraum = DateTime(2500);
+
+    //Eingrenzung Zeitraum DatePicker
+    var startZeitraum = DateTime(2021);
+    var endeZeitraum = DateTime(2500);
 
     //Analysebildschirm
     return Scaffold(
+      // AppBar
       appBar: AppBar(
-        title: Text("Analyse"),
+        title: const Text("Analyse"),
       ),
+
+      //Body
       body: Center(
           child: Column(
         children: <Widget>[
           //Auswahl Analyse nach
           Container(
             width: breite,
-            padding: EdgeInsets.all(5),
-            child: DropdownButtonFormField(
+            padding: const EdgeInsets.all(5),
+            child:
+
+                //DropDown Liste mit Kategorien nach denen gefiltert werden kann
+                DropdownButtonFormField(
               value: selectedAnalysisType,
               items: availableAnalysisType.map((String value) {
-                return DropdownMenuItem(child: Text(value), value: value);
+                return DropdownMenuItem(value: value, child: Text(value));
               }).toList(),
               onChanged: (String? neueAnalyseart) async {
                 setState(() {
@@ -131,10 +145,13 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
 
                 await updateData();
               },
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
+
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: "Analysieren",
               ),
+
+              //Style des DropDown Menüs aus basis_theme.dart
               style: Theme.of(context).dropdownMenuTheme.textStyle,
             ),
           ),
@@ -142,18 +159,19 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
           //Auswahl Übung
           Container(
             width: breite,
-            padding: EdgeInsets.all(5),
-            child: DropdownSearch<String>(
+            padding: const EdgeInsets.all(5),
+            child:
+
+                //DropDown zur Auswahl einer Übung, nach der gefiltert werden soll
+                DropdownSearch<String>(
               popupProps: PopupProps.menu(
                 showSelectedItems: true,
                 disabledItemFn: (String s) => s.startsWith('I'),
                 showSearchBox: true,
               ),
               items: exercises,
-              dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownDecoratorProps: const DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
-                  border: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.yellow)),
                   labelText: "Übung",
                 ),
               ),
@@ -167,45 +185,55 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
             ),
           ),
 
-          //Datum von
+          //Auswahl Datum von
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
                   width: breite / 2,
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
+
+                  //Auswahl als Button
                   child: ElevatedButton(
                     child: Text("${_datumVon.day.toString()}"
                         ".${_datumVon.month.toString()}."
                         "${_datumVon.year.toString()}"),
                     onPressed: () async {
-                      DateTime? _neuDatumVon = await showDatePicker(
+                      //DatePicker zur Kalenderauswahl
+                      DateTime? neuDatumVon = await showDatePicker(
                           context: context,
                           initialDate: _datumVon,
-                          firstDate: _startZeitraum,
-                          lastDate: _endeZeitraum);
-                      updateDatumVon(_neuDatumVon);
+                          firstDate: startZeitraum,
+                          lastDate: endeZeitraum);
+                      updateDatumVon(neuDatumVon);
                     },
                   )),
+
+              //Auswahl Datum bis
               Container(
                   width: breite / 2,
-                  padding: EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
+
+                  //Auswahl als Button
                   child: ElevatedButton(
                     child: Text("${_datumBis.day.toString()}"
                         ".${_datumBis.month.toString()}."
                         "${_datumBis.year.toString()}"),
                     onPressed: () async {
-                      DateTime? _neuDatumBis = await showDatePicker(
+                      //DatePicker zur Kalenderauswahl
+                      DateTime? neuDatumBis = await showDatePicker(
                           context: context,
                           initialDate: _datumBis,
-                          firstDate: _startZeitraum,
-                          lastDate: _endeZeitraum);
-                      updateDatumBis(_neuDatumBis);
+                          firstDate: startZeitraum,
+                          lastDate: endeZeitraum);
+                      updateDatumBis(neuDatumBis);
                     },
                   ))
             ],
           ),
-          Container(
+
+          //Darstellung Graph
+          SizedBox(
               width: breite + 50.0,
               height: 400.0,
               child: LineChart(LineChartData(
@@ -213,6 +241,8 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                 maxY: 20.0,
                 minX: _datumVon.millisecondsSinceEpoch.toDouble() / 86400000.0,
                 maxX: _datumBis.millisecondsSinceEpoch.toDouble() / 86400000.0,
+
+                //Formatierung Graph
                 lineBarsData: [
                   LineChartBarData(
                     spots: data,
@@ -223,6 +253,8 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                     ),
                   )
                 ],
+
+                //Formatierung der Achsentitel
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
@@ -232,16 +264,18 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                             var date = DateTime.fromMillisecondsSinceEpoch(
                                 (value * 86400000.0).toInt());
                             return SideTitleWidget(
+                              axisSide: meta.axisSide,
+                              space: 10.0,
                               child: Text(
                                 "${date.day.toString()}."
                                 "${date.month.toString()}."
                                 "${date.year.toString()}",
                                 textAlign: TextAlign.center,
                               ),
-                              axisSide: meta.axisSide,
-                              space: 10.0,
                             );
                           },
+
+                          //Maximal 3 Beschriftung auf der x-Achse
                           interval: (((_datumBis.millisecondsSinceEpoch
                                                   .toDouble() -
                                               _datumVon.millisecondsSinceEpoch
@@ -251,19 +285,23 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                                   .round()
                                   .toDouble() +
                               1)),
-                  topTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
                 ),
+
+                //Formatierung Umrandung
                 borderData: FlBorderData(
                     border: Border.all(
                   color: lila,
                 )),
+
+                //Formatierung Raster
                 gridData: FlGridData(
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (value) {
-                      return FlLine(
+                      return const FlLine(
                         color: lila,
                       );
                     }),

@@ -8,7 +8,6 @@ import 'package:lak_fitness/styles/color.dart';
 import 'package:lak_fitness/styles/text_box.dart';
 import 'package:lak_fitness/styles/utils.dart';
 import 'package:lak_fitness/styles/change_password.dart';
-
 import '../models/user.dart';
 import '../services/database_service.dart';
 import '../services/dialog_service.dart';
@@ -21,6 +20,7 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
+  // Default Werte des Users
   LakUser user = LakUser(
       email: "",
       username: "",
@@ -34,6 +34,7 @@ class _ProfilState extends State<Profil> {
     Navigator.of(context).pop();
   }
 
+  // Neues Passwort anlegen
   void newPassword() {
     showDialog<AlertDialog>(
       context: context,
@@ -44,15 +45,13 @@ class _ProfilState extends State<Profil> {
   }
 
   Uint8List? image;
-
+  // Profilbild aktualisieren
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       image = img;
     });
   }
-
-  //final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   // Bearbeitung der Nutzereigenschaften
   Future<T> editField<T>(String id, String field) async {
@@ -84,7 +83,7 @@ class _ProfilState extends State<Profil> {
           },
         ),
         actions: [
-          // cancel button
+          // Abbrechen Button
           TextButton(
             onPressed: () => Navigator.of(context).pop(T == String ? "" : 0),
             child: Text(
@@ -94,7 +93,7 @@ class _ProfilState extends State<Profil> {
             ),
           ),
 
-          // save button
+          // Speichern Button
           TextButton(
             onPressed: () async => {
               await FirebaseFirestore.instance
@@ -118,14 +117,9 @@ class _ProfilState extends State<Profil> {
         ],
       ),
     );
-
-    // update firestore
-    //if (newValue.trim().length > 0) {
-    // await usersCollection.doc(currentUser.email).update({field: newValue});
-    //}
   }
 
-  // sign out
+  // Abmelden
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
@@ -144,6 +138,7 @@ class _ProfilState extends State<Profil> {
         shadowColor: Colors.transparent,
         elevation: 0,
         actions: [
+          // Abmelde Button
           IconButton(
               onPressed: signUserOut, icon: const Icon(Icons.logout_rounded))
         ],
@@ -159,6 +154,7 @@ class _ProfilState extends State<Profil> {
                 .doc(currentuser.uid)
                 .snapshots(),
             builder: (context, snapshot) {
+              // Abfrage ob Benutzer Daten vorhanden sind
               if (snapshot.hasData) {
                 user = LakUser.fromJson(
                     snapshot.data!.data() as Map<String, dynamic>);
@@ -203,20 +199,21 @@ class _ProfilState extends State<Profil> {
                   // Benutzername
                   Container(
                     margin: const EdgeInsets.only(top: 8),
+                    // Name des aktuellen Benutzers
                     child: Text(
-                      user!.username!,
-                      textAlign: TextAlign
-                          .center, // Name muss aus der Datenbank geholt werden
+                      user.username,
+                      textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
 
-                  // Benutzer Geburtstag
+                  // Geburtstag des aktuellen Benutzers
                   MyTextBox(
                     sectionName: 'Geburtstag:',
                     text:
                         '${user.birthday.day.toString()}.${user.birthday.month.toString()}.${user.birthday.year.toString()}',
                     unit: '',
+                    // Änderung des Geburtsdatums
                     onPressed: () => {
                       DialogService(context)
                           .date(user.birthday)
@@ -229,11 +226,12 @@ class _ProfilState extends State<Profil> {
                     },
                   ),
 
-                  // Benutzer Gewicht
+                  // Gewicht des akutellen Benutzers
                   MyTextBox(
                       sectionName: 'Gewicht:',
                       text: user.weight.toString(),
                       unit: 'kg',
+                      // Änderung des Gewichts
                       onPressed: () =>
                           editField<int>(currentuser.uid, 'Gewicht')
                               .then((value) async => {
@@ -242,11 +240,12 @@ class _ProfilState extends State<Profil> {
                                         .updateUserData(weight: user.weight)
                                   })),
 
-                  // Benutzer Körpergröße
+                  // Körpergröße des aktuellen Benutzers
                   MyTextBox(
                     sectionName: 'Größe:',
                     text: user.height.toString(),
                     unit: 'cm',
+                    // Änderung der Körpergröße
                     onPressed: () => editField<int>(currentuser.uid, 'Größe')
                         .then((value) async => {
                               setState(() => user.height = value),
@@ -255,11 +254,12 @@ class _ProfilState extends State<Profil> {
                             }),
                   ),
 
-                  // Benutzer Email
+                  // Email des aktuellen Benutzers
                   MyTextBox(
                     sectionName: 'Email:',
                     text: user.email,
                     unit: '',
+                    // Änderung des Emails
                     onPressed: () => editField<String>(currentuser.uid, 'Email')
                         .then((value) async => {
                               setState(() => user.email = value),
@@ -272,6 +272,7 @@ class _ProfilState extends State<Profil> {
                   Container(
                     margin: const EdgeInsets.only(left: 20, top: 32, right: 20),
                     child: ElevatedButton(
+                        // Änderung des Passwortes
                         onPressed: newPassword,
                         style: buttonPrimary,
                         child: Text(

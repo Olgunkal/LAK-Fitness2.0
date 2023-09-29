@@ -24,7 +24,7 @@ class StsListenelement extends StatelessWidget {
     return Container(
       //Layout
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: black,
           border: Border(bottom: BorderSide(color: lila, width: 2.0))),
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class ChartTest extends StatelessWidget {
-
   //Trainingsdaten
   List<FlSpot> trainingsdata2 = <FlSpot>[
     FlSpot(1.0, 10.0),
@@ -15,33 +14,23 @@ class ChartTest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //AppBar
-      appBar: AppBar(
-        //Inhalt
-        title: Text(
-            'Home',
-            style: Theme.of(context).textTheme.headlineMedium
+        //AppBar
+        appBar: AppBar(
+          //Inhalt
+          title:
+              Text('Home', style: Theme.of(context).textTheme.headlineMedium),
         ),
 
-      ),
-
-      // Body
-      body: Container(
-        width: 200.0,
-        height: 400.0,
-        child: LineChart(
-            LineChartData(
-                minX: 1.0,
-                maxX: 10.0,
-                minY: 10.0,
-                maxY: 20.0,
-                lineBarsData:
-                [LineChartBarData(
-                    spots: trainingsdata2
-                )]
-            )
-        ),
-      )
-    );
+        // Body
+        body: Container(
+          width: 200.0,
+          height: 400.0,
+          child: LineChart(LineChartData(
+              minX: 1.0,
+              maxX: 10.0,
+              minY: 10.0,
+              maxY: 20.0,
+              lineBarsData: [LineChartBarData(spots: trainingsdata2)])),
+        ));
   }
 }

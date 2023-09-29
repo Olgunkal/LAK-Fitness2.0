@@ -7,7 +7,7 @@ import '../services/dialog_service.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
-  LoginScreen({super.key, required this.onTap});
+  const LoginScreen({super.key, required this.onTap});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 43, 41, 41),
+        backgroundColor: const Color.fromARGB(255, 43, 41, 41),
         body: SafeArea(
             child: Center(
           child: SingleChildScrollView(
@@ -107,15 +107,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 10),
                 // Kein Konto -> weiterleitung Regristration
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 50.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Noch kein Konto? ',
+                      const Text('Noch kein Konto? ',
                           style: TextStyle(color: Colors.white)),
                       GestureDetector(
                         onTap: widget.onTap,
-                        child: Text(
+                        child: const Text(
                           'Jetzt Registrieren!',
                           style: TextStyle(color: (Colors.blue)),
                         ),

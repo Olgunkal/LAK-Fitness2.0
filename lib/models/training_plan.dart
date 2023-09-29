@@ -5,13 +5,13 @@ class TrainingPlan {
   List<CurrentExerciseState> exerciseStates = [];
 
   TrainingPlan({required this.name, required this.exerciseStates});
-
+// Hinzufügen der Übung in der Datenbank im Trainingsplan
   TrainingPlan.fromJson(Map<String, dynamic>? json)
       : this(
             name: json!['Name'],
             exerciseStates: List<CurrentExerciseState>.from(
                 json['Übungen'].map((x) => CurrentExerciseState.fromJson(x))));
-
+  // Befüllen der Werte der Felder in der Datenbank
   Map<String, dynamic> toJson() {
     return {
       'Name': name,

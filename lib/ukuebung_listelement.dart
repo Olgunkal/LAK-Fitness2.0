@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/basis_theme.dart';
-import 'package:lak_fitness/pages/trainingsplan.dart';
 import 'package:lak_fitness/props/trainingplan_props.dart';
 import 'package:lak_fitness/services/database_service.dart';
 import 'package:lak_fitness/uebung_definieren.dart';
@@ -44,7 +43,7 @@ class UkuebungListenelement extends StatelessWidget {
     return Container(
       //Layout
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: black,
           border: Border(bottom: BorderSide(color: lila, width: 2.0))),
 
@@ -53,7 +52,7 @@ class UkuebungListenelement extends StatelessWidget {
         // Infobutton am Anfang des Listenelements
         leading: IconButton(
           onPressed: zeigeInfotxt,
-          icon: Icon(Icons.info),
+          icon: const Icon(Icons.info),
         ),
 
         //Title Listenelement
@@ -65,7 +64,7 @@ class UkuebungListenelement extends StatelessWidget {
 
         trailing: IconButton(
           onPressed: () => addExercise(context),
-          icon: Icon(Icons.add_circle_outline_sharp),
+          icon: const Icon(Icons.add_circle_outline_sharp),
         ),
       ),
     );

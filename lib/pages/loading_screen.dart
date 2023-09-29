@@ -13,7 +13,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (_) => const AuthPage()));
     });
@@ -21,16 +21,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Color.fromARGB(255, 43, 41, 41),
-      body: Container(
-        child: Center(
-          child: Text('LAK-Fitness',
-              style: TextStyle(
-                color: Colors.purple,
-                fontSize: 54,
-              )),
-        ),
+      body: Center(
+        child: Text('LAK-Fitness',
+            style: TextStyle(
+              color: Colors.purple,
+              fontSize: 54,
+            )),
       ),
     );
   }

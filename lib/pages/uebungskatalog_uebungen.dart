@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/current_exercise_state.dart';
 import '../models/exercise.dart';
 import '../props/new_exercise_props.dart';
 import '../props/trainingplan_props.dart';
@@ -12,18 +11,18 @@ class UebungskatalogUebungen extends StatefulWidget {
   final String uebungskatalogName;
   final TrainingPlanProps props;
 
-  UebungskatalogUebungen(
-      {required this.props, required this.uebungskatalogName});
+  const UebungskatalogUebungen(
+      {super.key, required this.props, required this.uebungskatalogName});
 
   @override
   State<UebungskatalogUebungen> createState() => _UebungskatalogUebungenState();
 }
 
 class _UebungskatalogUebungenState extends State<UebungskatalogUebungen> {
-  // Temporäre Schnittstelle
+  // Liste für Übugen
   List<Exercise> exercises = [];
-
-  void neueUebungErstellen() {
+  // Auf Bildschirm wo neue Übung erstellt werden kann weiterleiten
+  void newExerciseScreen() {
     Navigator.push<Widget>(
         context,
         MaterialPageRoute<Widget>(
@@ -46,6 +45,7 @@ class _UebungskatalogUebungenState extends State<UebungskatalogUebungen> {
     });
   }
 
+  // Übung wird Katalog hinzugefügt
   Future<void> onNewExerciseAdded(Exercise exercise) async {
     setState(() {
       exercises.add(exercise);
@@ -65,14 +65,14 @@ class _UebungskatalogUebungenState extends State<UebungskatalogUebungen> {
         //Button Neue Übung erstellen
         actions: [
           IconButton(
-            onPressed: neueUebungErstellen,
+            onPressed: newExerciseScreen,
             icon: const Icon(Icons.add_circle),
             style: Theme.of(context).iconButtonTheme.style,
           )
         ],
       ),
 
-      // Body
+      // Liste für Übungen
       body: ListView.builder(
           itemCount: exercises.length,
           itemBuilder: (context, i) {

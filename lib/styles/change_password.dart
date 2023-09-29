@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/styles/color.dart';
 
+// Widget zur Passwortänderung
 class ChangePassword extends StatefulWidget {
   final void Function(String txt) changePassword;
   const ChangePassword({required this.changePassword, super.key});
@@ -38,6 +38,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       return;
     }
 
+    // Passwortaktualisierung in Firebase
     final user = FirebaseAuth.instance.currentUser;
     final cred = EmailAuthProvider.credential(
         email: currentUser!.email!, password: oldPasswordController.text);
@@ -52,6 +53,7 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   Widget build(BuildContext context) {
+    // Ausgabe als AlertDialog
     return AlertDialog(
       backgroundColor: background,
       shape: const RoundedRectangleBorder(
@@ -78,6 +80,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   suffixIcon: const Icon(Icons.remove_red_eye),
                 ),
                 onChanged: (String txt) => password = txt,
+
+                // Fehlermeldung bei ungültiger Eingabe
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Passwort ungültig';
@@ -105,6 +109,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   helperMaxLines: 2,
                 ),
                 onChanged: (String txt) => password = txt,
+
+                // Fehlermeldung bei ungültiger Eingabe
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Passwort ungültig';
@@ -128,6 +134,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   suffixIcon: const Icon(Icons.remove_red_eye),
                 ),
                 onChanged: (String txt) => confirmedPassword = txt,
+
+                // Fehlermeldung wenn Passwörter nicht übereinstimmen
                 validator: (value) {
                   if (value!.isEmpty || value != newPasswordController.text) {
                     return 'Passwort stimmt nicht über ein';
@@ -136,6 +144,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   }
                 },
               ),
+
+              //Bestätigen-Button
               const SizedBox(height: 16.0),
               IconButton(
                 onPressed: save,

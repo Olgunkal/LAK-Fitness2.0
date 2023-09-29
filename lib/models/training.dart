@@ -13,7 +13,7 @@ class Training {
       required this.weight,
       required this.repetion,
       required this.sets});
-
+// Hinzufügen des Trainings in der Datenbank
   Training.fromJson(Map<String, dynamic>? json)
       : this(
             date: DateTime.parse(json!['Datum']),
@@ -21,7 +21,7 @@ class Training {
             weight: json['Gewicht'],
             repetion: json['Wiederholungen'],
             sets: json['Sätze']);
-
+// Hinzufügen der Werte in die Datenbank ins Training
   Map<String, dynamic> toJson() {
     return {
       'Datum': DateFormat('yyyy-MM-dd').format(date),

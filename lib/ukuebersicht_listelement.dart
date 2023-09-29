@@ -8,7 +8,7 @@ class UkueListenelement extends StatelessWidget {
   final String uebungskatalogName;
   final TrainingPlanProps props;
 
-  const UkueListenelement(this.props, this.uebungskatalogName);
+  const UkueListenelement(this.props, this.uebungskatalogName, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class UkueListenelement extends StatelessWidget {
     return Container(
       //Layout
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: black,
           border: Border(bottom: BorderSide(color: lila, width: 2.0))),
 

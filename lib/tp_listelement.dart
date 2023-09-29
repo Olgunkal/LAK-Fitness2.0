@@ -33,7 +33,7 @@ class _TpListenelementState extends State<TpListenelement> {
       // Listenelemente
       child: Slidable(
           startActionPane: ActionPane(
-            motion: ScrollMotion(),
+            motion: const ScrollMotion(),
             children: [
               SlidableAction(
                   icon: Icons.check,
@@ -42,7 +42,7 @@ class _TpListenelementState extends State<TpListenelement> {
             ],
           ),
           endActionPane: ActionPane(
-            motion: ScrollMotion(),
+            motion: const ScrollMotion(),
             children: [
               SlidableAction(
                   icon: Icons.delete_forever,
@@ -66,7 +66,7 @@ class _TpListenelementState extends State<TpListenelement> {
                   title: const Text('Sätze'),
                   trailing: Container(
                       width: 50,
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: TextField(
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
@@ -90,10 +90,10 @@ class _TpListenelementState extends State<TpListenelement> {
                       )),
                 ),
                 ListTile(
-                    title: Text('Wiederholungen'),
+                    title: const Text('Wiederholungen'),
                     trailing: Container(
                         width: 50,
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         child: TextField(
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,
@@ -117,10 +117,10 @@ class _TpListenelementState extends State<TpListenelement> {
                           },
                         ))),
                 ListTile(
-                    title: Text('Gewicht'),
+                    title: const Text('Gewicht'),
                     trailing: Container(
                         width: 50,
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         child: TextField(
                           textAlign: TextAlign.center,
                           textAlignVertical: TextAlignVertical.center,

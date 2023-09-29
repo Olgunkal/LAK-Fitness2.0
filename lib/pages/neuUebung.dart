@@ -15,8 +15,16 @@ class neueUebung extends StatefulWidget {
 }
 
 class _neueUebungState extends State<neueUebung> {
-  List<String> availableCatalogues = <String>["Bauch", "Arme", "Rücken"];
+  // Liste der Kataloge
+  List<String> availableCatalogues = <String>[
+    'Brust',
+    'Beine',
+    'Rücken',
+    'Arme',
+    'Bauch'
+  ];
 
+  // Erstellung einer Übung
   Future<void> submit(String name, String description) async {
     try {
       var exercise = await DatabaseService()
@@ -36,7 +44,6 @@ class _neueUebungState extends State<neueUebung> {
     return Scaffold(
         //AppBar
         appBar: AppBar(
-          //Inhalt
           title: Text('Übung erstellen',
               style: Theme.of(context).textTheme.headlineMedium),
         ),
@@ -44,32 +51,32 @@ class _neueUebungState extends State<neueUebung> {
         // Body
         body: Column(
           children: <Widget>[
-            Container(
+            const SizedBox(
               width: breiteContainer,
               child: Text("Name der Übung"),
             ),
 
-            //Neu Übung name
-            Container(
+            // Texfeld für neue Übung
+            SizedBox(
                 width: breiteContainer,
                 child: TextField(
                   onChanged: (text) {
                     name = text;
                   },
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
                     labelText: "Trainingsplan",
                     hintText: "Übung",
                   ),
                 )),
 
-            Container(
+            const SizedBox(
               width: breiteContainer,
               child: Text("Katalog"),
             ),
 
             //DropDown Katalog
-            Container(
+            SizedBox(
                 width: breiteContainer,
                 child: DropdownSearch<String>(
                   popupProps: PopupProps.menu(
@@ -78,43 +85,42 @@ class _neueUebungState extends State<neueUebung> {
                     showSearchBox: true,
                   ),
                   items: availableCatalogues,
-                  dropdownDecoratorProps: DropDownDecoratorProps(
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
-                      border: const OutlineInputBorder(
+                      border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.yellow)),
                       labelText: "Katalog",
                     ),
                   ),
                 )),
 
-            Container(
+            const SizedBox(
               width: breiteContainer,
               child: Text("Beschreibung"),
             ),
 
-            Container(
+            // Textfeld für Beschreibung
+            SizedBox(
                 width: breiteContainer,
                 child: TextField(
                   onChanged: (text) {
                     description = text;
                   },
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
                     labelText: "Beschreibung",
                     hintText: "Beschreibung",
                   ),
                 )),
+            // Button zum erstellen einer Übung
             TextButton(
               onPressed: () => submit(name, description),
-              child: Text(
+              child: const Text(
                 'Übung erstellen',
                 style: TextStyle(),
               ),
             ),
           ],
-        )
-        // Eingabe Name Trainingsplan
-
-        );
+        ));
   }
 }

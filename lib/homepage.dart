@@ -14,14 +14,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Index für Navigationsbar
   int currentIndex = 1;
-
+  // Die 3 Bildschirme der App
   final List<Widget> _pages = [
     const Analysebildschirm(),
     const Startseite(),
     const Profil(),
   ];
 
+  // Ändert ensprechend des Indexes auf die Bildschirme von der Liste
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Navigationsbar
   Widget navigationbar() => BottomNavigationBar(
         backgroundColor: background,
         iconSize: 30.0,
@@ -38,6 +41,7 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: white,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        //Icons der Navigationsbar (Analyse, Home, Profil)
         items: const [
           BottomNavigationBarItem(
             label: 'Analyse',
@@ -55,6 +59,7 @@ class _HomePageState extends State<HomePage> {
             tooltip: 'Profil',
           ),
         ],
+        // Änderung des Indexes nachdem man auf Icon gedrückt hat
         currentIndex: currentIndex,
         onTap: (int index) {
           setState(() {
