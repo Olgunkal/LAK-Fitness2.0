@@ -8,6 +8,7 @@ class LoadingScreen extends StatefulWidget {
   State<LoadingScreen> createState() => _LoadingScreenState();
 }
 
+// Ladebildschirm lädt 2 sekunden und leitet weiter an AuthPage
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {

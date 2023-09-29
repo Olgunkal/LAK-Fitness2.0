@@ -17,30 +17,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  //sign  user
+  // Benutzer Anmelden
   void signUserIn() async {
-    //show loading cirle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        );
-      },
-    );
+    // Ladezirkel anzeigen
+    DialogService(context).progress();
 
     try {
+      // Anmeldung mit Firebase
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
 
       Navigator.pop(context);
+      // Fehler werden abgefangen
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-
       if (e.code == 'user-not-found' || e.code == 'invalid-email') {
         await DialogService(context).error('Falsche E-Mail');
       } else if (e.code == 'wrong-password') {
@@ -60,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                //Titel
+                // Titel
                 const Text(
                   'Anmeldung',
                   style: TextStyle(
@@ -69,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                //Email Textfeld
+                // Email Textfeld Überschrift
                 const Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
@@ -84,12 +76,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
+                // Email Textfeld
                 MyTextField(
                   controller: emailController,
                   hintText: 'E-Mail eingeben',
                   obscureText: false,
                 ),
-
+                // Passwort Textfeld Überschrift
                 const Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
@@ -112,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 const SizedBox(height: 10),
-                //Kein Konto -> weiterleitung Regristration
+                // Kein Konto -> weiterleitung Regristration
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 50.0),
                   child: Row(
@@ -132,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 const SizedBox(height: 20),
-                //anmelde Button
+                // Anmelde Button
                 MyButton(
                   buttonText: 'anmelden',
                   onTap: signUserIn,

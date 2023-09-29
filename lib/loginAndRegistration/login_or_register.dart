@@ -10,10 +10,10 @@ class LoginOrRegisterPage extends StatefulWidget {
 }
 
 class _LoginOrRegisterPage extends State<LoginOrRegisterPage> {
-  // login seite anzeigen
+  // Anmeldebildschirm anzeigen auf 'true' gesetzt
   bool showLoginPage = true;
 
-  //wechsel zwischen login und register seite
+  // Wechsel zwischen Anmelde- und Registrierungsbildschirm seite
   void tooglePages() {
     setState(() {
       showLoginPage = !showLoginPage;
@@ -22,10 +22,12 @@ class _LoginOrRegisterPage extends State<LoginOrRegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Wenn 'true', zeige Anmeldebildschirm
     if (showLoginPage) {
       return LoginScreen(
         onTap: tooglePages,
       );
+      // Sonst Registrierungsbildchirm anzeigen
     } else {
       return RegistrationScreen(
         onTap: tooglePages,

@@ -18,14 +18,17 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
+    // Variablen zum Speichern der Eingabe
     final usernameController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
+    // Benutzer Registrieren
     Future registerUser() async {
+      // Ladezirkel anzeigen
       DialogService(context).progress();
-
+      // Fehler werden abgefangen
       if (passwordController.text.length <= 5) {
         Navigator.pop(context);
         DialogService(context).error("Passwort zu kurz!");
@@ -35,7 +38,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         DialogService(context).error("Passwörter stimmen nicht überein!");
         return;
       }
-
+      // Registrierung mit Firebase
       try {
         await DatabaseService().register(emailController.text,
             usernameController.text, passwordController.text);
@@ -51,7 +54,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                //Titel
+                // Titel
                 Text(
                   'Registrierung',
                   style: TextStyle(
@@ -60,7 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                //Textfeld Benutzername
+                // Benutzername Textfeld Überschrift
                 const Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
@@ -75,13 +78,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                 ),
+                // Benutzername Textfeld
                 MyTextField(
                   controller: usernameController,
                   hintText: 'Benutzername eingeben',
                   obscureText: false,
                 ),
 
-                //Textfeld Email
+                // Email Textfeld Überschrift
                 const Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
@@ -96,13 +100,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                 ),
+                // Email Textfeld
                 MyTextField(
                   controller: emailController,
                   hintText: 'E-Mail eingeben',
                   obscureText: false,
                 ),
 
-                //Textfeld Passwort
+                // Passwort Textfeld
                 const Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
@@ -117,14 +122,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                 ),
+                // Passwort Textfeld
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Passwort eingeben',
                   obscureText: true,
                 ),
-
-                //Textfeld Passwort wiederholen
-
+                // Passwort Textfeld erneut eingeben Titel
                 const Padding(
                   padding:
                       EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
@@ -139,13 +143,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                 ),
+                // Passwort Textfeld erneut eingeben
                 MyTextField(
                   controller: confirmPasswordController,
                   hintText: 'Passwort erneut eingeben',
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
-                //Kein Konto -> weiterleitung Regristration
+                // Kein Konto -> weiterleitung Regristration Text
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 50.0),
                   child: Row(
@@ -164,7 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
+                // Kein Konto -> weiterleitung Regristration Button
                 MyButton(
                   buttonText: 'registrieren',
                   onTap: registerUser,
