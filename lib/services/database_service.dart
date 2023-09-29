@@ -28,7 +28,8 @@ class DatabaseService {
       'Geburtsdatum': DateFormat('yyyy-MM-dd').format(DateTime.now()),
       'Gewicht': 0,
       'Größe': 0,
-      'Plans': []
+      'Plans': [],
+      'Trainings': []
     });
   }
 
