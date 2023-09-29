@@ -201,6 +201,12 @@ class DatabaseService {
     return entity;
   }
 
+  Future<List<Training>> getTrainingsByName(String name) async {
+    var user = await getCurrentUser();
+
+    return user.trainings.toList();
+  }
+
   Future<TrainingPlan> getTrainingPlan(String name) async {
     final user = await getCurrentUser();
     return user.plans.firstWhere((element) => element.name == name);
@@ -218,7 +224,7 @@ class DatabaseService {
     return result.docs.map((e) => e.data()).toList();
   }
 
-  Future<List<CurrentExerciseState>> getExercises(String id) async {
+  Future<List<CurrentExerciseState>> getExercisesByPlan(String id) async {
     var user = await userCollection
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .withConverter<LakUser>(
@@ -233,6 +239,17 @@ class DatabaseService {
     log(id);
 
     return found.first.exerciseStates.toList();
+  }
+
+  Future<List<Exercise>> getExercises() async {
+    var result = await exerciseCollection
+        .withConverter<Exercise>(
+            fromFirestore: (snapshot, options) =>
+                Exercise.fromJson(snapshot.data()),
+            toFirestore: (value, options) => value.toJson())
+        .get();
+
+    return result.docs.map((e) => e.data()).toList();
   }
 
   Future<List<TrainingPlan>> getTrainingPlans() async {

@@ -30,8 +30,8 @@ class _TrainingsplanState extends State<Trainingsplan> {
   }
 
   Future<void> onNotify() async {
-    var result =
-        await DatabaseService().getExercises(widget.props.trainingPlanName);
+    var result = await DatabaseService()
+        .getExercisesByPlan(widget.props.trainingPlanName);
 
     setState(() {
       exerciseStates = result;
@@ -43,8 +43,8 @@ class _TrainingsplanState extends State<Trainingsplan> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      var result =
-          await DatabaseService().getExercises(widget.props.trainingPlanName);
+      var result = await DatabaseService()
+          .getExercisesByPlan(widget.props.trainingPlanName);
       setState(() {
         exerciseStates = result;
       });
@@ -78,7 +78,7 @@ class _TrainingsplanState extends State<Trainingsplan> {
             return TpListenelement(
                 widget.props.trainingPlanName, exerciseStates[i], () async {
               var result = await DatabaseService()
-                  .getExercises(widget.props.trainingPlanName);
+                  .getExercisesByPlan(widget.props.trainingPlanName);
 
               setState(() {
                 exerciseStates = result;

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:lak_fitness/basis_theme.dart';
 import 'package:lak_fitness/styles/color.dart';
 
+import '../services/database_service.dart';
+
 //Analyse Bildschirm
 
 class Analysebildschirm extends StatefulWidget {
@@ -14,20 +16,34 @@ class Analysebildschirm extends StatefulWidget {
 }
 
 class _AnalysebildschirmState extends State<Analysebildschirm> {
-  var _aAnalyseart = "Gewicht";
+  String selectedAnalysisType = "Gewicht";
+  String? selectedExercise;
 
-  //Analysearten
-  List<String> analysearten = <String>["Gewicht", "Sätze", "Wiederholungen"];
+  List<String> availableAnalysisType = <String>[
+    "Gewicht",
+    "Sätze",
+    "Wiederholungen"
+  ];
 
-  //Übungen
-  List<String> uebungen = <String>["Bankdrücken", "Sit-Ups", "Dips"];
-
-  //Datum
+  List<String> exercises = <String>[];
+  List<FlSpot> data = [];
 
   List<String> letzteDaten = <String>[
     DateTime(2022, 01, 01).toString(),
     DateTime(2023, 01, 01).toString()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var result = await DatabaseService().getExercises();
+
+      setState(() {});
+      exercises = result.map((e) => e.name).toList();
+    });
+  }
 
   var _datumVon = DateTime(2022, 09, 01);
   var _datumBis = DateTime.now();
@@ -55,33 +71,35 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
     }
   }
 
-  //Trainingsdaten
-  List<FlSpot> trainingsdata = <FlSpot>[
-    FlSpot(
-        DateTime(2023, 09, 01).millisecondsSinceEpoch.toDouble() / 86400000.0,
-        10.0),
-    FlSpot(
-        DateTime(2023, 09, 02).millisecondsSinceEpoch.toDouble() / 86400000.0,
-        12.0),
-    FlSpot(
-        DateTime(2023, 09, 03).millisecondsSinceEpoch.toDouble() / 86400000.0,
-        15.0),
-    FlSpot(
-        DateTime(2023, 09, 04).millisecondsSinceEpoch.toDouble() / 86400000.0,
-        12.0),
-    FlSpot(
-        DateTime(2023, 09, 05).millisecondsSinceEpoch.toDouble() / 86400000.0,
-        17.0)
-  ];
+  Future<void> updateData() async {
+    var result = await DatabaseService().getTrainingsByName(selectedExercise!);
 
-  //Trainingsdaten
-  List<FlSpot> trainingsdata2 = <FlSpot>[
-    FlSpot(1.0, 10.0),
-    FlSpot(2.0 / 86400000.0, 12.0),
-    FlSpot(3.0 / 86400000.0, 15.0),
-    FlSpot(4.0 / 86400000.0, 12.0),
-    FlSpot(5.0 / 86400000.0, 17.0)
-  ];
+    if (selectedAnalysisType == 'Gewicht') {
+      setState(() {
+        data = result
+            .map((e) => FlSpot(
+                e.date.millisecondsSinceEpoch.toDouble() / 86400000.0,
+                e.weight.toDouble()))
+            .toList();
+      });
+    } else if (selectedAnalysisType == 'Sätze') {
+      setState(() {
+        data = result
+            .map((e) => FlSpot(
+                e.date.millisecondsSinceEpoch.toDouble() / 86400000.0,
+                e.sets.toDouble()))
+            .toList();
+      });
+    } else if (selectedAnalysisType == 'Wiederholungen') {
+      setState(() {
+        data = result
+            .map((e) => FlSpot(
+                e.date.millisecondsSinceEpoch.toDouble() / 86400000.0,
+                e.repetion.toDouble()))
+            .toList();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,14 +120,16 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
             width: breite,
             padding: EdgeInsets.all(5),
             child: DropdownButtonFormField(
-              value: _aAnalyseart,
-              items: analysearten.map((String value) {
+              value: selectedAnalysisType,
+              items: availableAnalysisType.map((String value) {
                 return DropdownMenuItem(child: Text(value), value: value);
               }).toList(),
-              onChanged: (String? neueAnalyseart) {
+              onChanged: (String? neueAnalyseart) async {
                 setState(() {
-                  _aAnalyseart = neueAnalyseart!;
+                  selectedAnalysisType = neueAnalyseart!;
                 });
+
+                await updateData();
               },
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
@@ -129,7 +149,7 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                 disabledItemFn: (String s) => s.startsWith('I'),
                 showSearchBox: true,
               ),
-              items: uebungen,
+              items: exercises,
               dropdownDecoratorProps: DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
                   border: const OutlineInputBorder(
@@ -137,7 +157,13 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                   labelText: "Übung",
                 ),
               ),
-              onChanged: print,
+              onChanged: (String? value) async {
+                setState(() {
+                  selectedExercise = value!;
+                });
+
+                await updateData();
+              },
             ),
           ),
 
@@ -189,7 +215,7 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                 maxX: _datumBis.millisecondsSinceEpoch.toDouble() / 86400000.0,
                 lineBarsData: [
                   LineChartBarData(
-                    spots: trainingsdata,
+                    spots: data,
                     color: white,
                     belowBarData: BarAreaData(
                       show: true,
