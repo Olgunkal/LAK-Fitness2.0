@@ -13,8 +13,7 @@ class Startseite extends StatefulWidget {
 }
 
 class _StartseiteState extends State<Startseite> {
-  // Temporäre Schnittstelle
-  List<String> trainingsplaene = [];
+  List<TrainingPlan> plans = [];
 
   @override
   void initState() {
@@ -22,22 +21,18 @@ class _StartseiteState extends State<Startseite> {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var result = await DatabaseService().getTrainingPlans();
-      setState(() {
-        trainingsplaene = result.map((x) => x.name).toList();
-      });
+      setState(() => plans = result);
     });
   }
 
   //Neuen Trainingsplan hinzufügen
-  Future trainingsplanHinzufuegen(String name) async {
-    await DatabaseService()
-        .createTrainingPlan(TrainingPlan(name: name, exercises: []));
+  Future addTrainingPlan(String name) async {
+    var list = await DatabaseService()
+        .appendTrainingPlan(TrainingPlan(name: name, exerciseStates: []));
 
     setState(() {
-      if (name != "") {
-        trainingsplaene.add(name);
-        Navigator.pop(context);
-      }
+      plans = list;
+      Navigator.pop(context);
     });
   }
 
@@ -56,14 +51,14 @@ class _StartseiteState extends State<Startseite> {
 
             //Inhalt
             content: TextField(
-              onSubmitted: trainingsplanHinzufuegen,
+              onSubmitted: addTrainingPlan,
               onChanged: (text) {
                 nameTrainingsplan = text;
               },
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 labelText: "Trainingsplan",
-                hintText: "Trainingsplan${trainingsplaene.length + 1}",
+                hintText: "Trainingsplan${plans.length + 1}",
               ),
             ),
             title: const Text("Neuer Trainingsplan"),
@@ -71,7 +66,7 @@ class _StartseiteState extends State<Startseite> {
               Center(
                 child: IconButton(
                     onPressed: () {
-                      trainingsplanHinzufuegen(nameTrainingsplan);
+                      addTrainingPlan(nameTrainingsplan);
                     },
                     icon: const Icon(Icons.check_circle)),
               )
@@ -101,10 +96,10 @@ class _StartseiteState extends State<Startseite> {
 
       // Body
       body: ListView.builder(
-          itemCount: trainingsplaene.length,
+          itemCount: plans.length,
           itemBuilder: (context, i) {
             return StsListenelement(
-                TrainingPlanProps(trainingPlanName: trainingsplaene[i]));
+                TrainingPlanProps(trainingPlanName: plans[i].name));
           }),
     );
   }

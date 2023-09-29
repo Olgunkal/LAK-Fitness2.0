@@ -1,21 +1,21 @@
-import 'exercise.dart';
+import 'current_exercise_state.dart';
 
 class TrainingPlan {
   String name;
-  List<Exercise> exercises = [];
+  List<CurrentExerciseState> exerciseStates = [];
 
-  TrainingPlan({required this.name, required this.exercises});
+  TrainingPlan({required this.name, required this.exerciseStates});
 
   TrainingPlan.fromJson(Map<String, dynamic>? json)
       : this(
             name: json!['Name'],
-            exercises: List<Exercise>.from(
-                json['Übungen'].map((x) => Exercise.fromJson(x))));
+            exerciseStates: List<CurrentExerciseState>.from(
+                json['Übungen'].map((x) => CurrentExerciseState.fromJson(x))));
 
   Map<String, dynamic> toJson() {
     return {
       'Name': name,
-      'Übungen': List<dynamic>.from(exercises.map((x) => x.toJson()))
+      'Übungen': List<dynamic>.from(exerciseStates.map((x) => x.toJson()))
     };
   }
 }

@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import '../models/exercise.dart';
+import '../models/current_exercise_state.dart';
 import '../props/trainingplan_props.dart';
 import '../services/database_service.dart';
 import 'uebungskatalog.dart';
@@ -19,7 +17,7 @@ class Trainingsplan extends StatefulWidget {
 }
 
 class _TrainingsplanState extends State<Trainingsplan> {
-  List<Exercise> exercises = [];
+  List<CurrentExerciseState> exerciseStates = [];
 
   void neuUebungHinzufuegen() {
     Navigator.push<Widget>(
@@ -31,8 +29,13 @@ class _TrainingsplanState extends State<Trainingsplan> {
                     onNotify: onNotify))));
   }
 
-  void onNotify() {
-    log('UPDATING');
+  Future<void> onNotify() async {
+    var result =
+        await DatabaseService().getExercises(widget.props.trainingPlanName);
+
+    setState(() {
+      exerciseStates = result;
+    });
   }
 
   @override
@@ -43,7 +46,7 @@ class _TrainingsplanState extends State<Trainingsplan> {
       var result =
           await DatabaseService().getExercises(widget.props.trainingPlanName);
       setState(() {
-        exercises = result;
+        exerciseStates = result;
       });
     });
   }
@@ -70,13 +73,15 @@ class _TrainingsplanState extends State<Trainingsplan> {
 
       // Body
       body: ListView.builder(
-          itemCount: exercises.length,
+          itemCount: exerciseStates.length,
           itemBuilder: (context, i) {
             return TpListenelement(
-                widget.props.trainingPlanName, exercises[i].name, () {
+                widget.props.trainingPlanName, exerciseStates[i], () async {
+              var result = await DatabaseService()
+                  .getExercises(widget.props.trainingPlanName);
+
               setState(() {
-                exercises.removeWhere(
-                    (element) => element.name == exercises[i].name);
+                exerciseStates = result;
               });
             });
           }),

@@ -1,24 +1,36 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/basis_theme.dart';
-import '../sts_listelement.dart';
+import '../props/new_exercise_props.dart';
+import '../services/database_service.dart';
 
 class neueUebung extends StatefulWidget {
-  //Konstruktor
-  const neueUebung({super.key});
+  final NewExerciseProps props;
+  final String catalogName;
+
+  const neueUebung({super.key, required this.props, required this.catalogName});
 
   @override
   State<neueUebung> createState() => _neueUebungState();
 }
 
 class _neueUebungState extends State<neueUebung> {
-  //Temporäre Kataloge
-  List<String> kataloge = <String>["Bauch", "Arme", "Rücken"];
+  List<String> availableCatalogues = <String>["Bauch", "Arme", "Rücken"];
+
+  Future<void> submit(String name, String description) async {
+    try {
+      var exercise = await DatabaseService()
+          .createExercise(name, description, widget.catalogName);
+      widget.props.onNotify!(exercise);
+    } finally {
+      Navigator.pop(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    String nameNeuUebung;
-    String beschreibung;
+    String name = '';
+    String description = '';
 
     // Hauptbildschirm
     return Scaffold(
@@ -42,7 +54,7 @@ class _neueUebungState extends State<neueUebung> {
                 width: breiteContainer,
                 child: TextField(
                   onChanged: (text) {
-                    nameNeuUebung = text;
+                    name = text;
                   },
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
@@ -65,7 +77,7 @@ class _neueUebungState extends State<neueUebung> {
                     disabledItemFn: (String s) => s.startsWith('I'),
                     showSearchBox: true,
                   ),
-                  items: kataloge,
+                  items: availableCatalogues,
                   dropdownDecoratorProps: DropDownDecoratorProps(
                     dropdownSearchDecoration: InputDecoration(
                       border: const OutlineInputBorder(
@@ -84,7 +96,7 @@ class _neueUebungState extends State<neueUebung> {
                 width: breiteContainer,
                 child: TextField(
                   onChanged: (text) {
-                    beschreibung = text;
+                    description = text;
                   },
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
@@ -92,6 +104,13 @@ class _neueUebungState extends State<neueUebung> {
                     hintText: "Beschreibung",
                   ),
                 )),
+            TextButton(
+              onPressed: () => submit(name, description),
+              child: Text(
+                'Übung erstellen',
+                style: TextStyle(),
+              ),
+            ),
           ],
         )
         // Eingabe Name Trainingsplan

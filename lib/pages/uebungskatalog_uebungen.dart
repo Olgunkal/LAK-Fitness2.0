@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import '../models/current_exercise_state.dart';
+import '../models/exercise.dart';
+import '../props/new_exercise_props.dart';
+import '../props/trainingplan_props.dart';
+import '../services/database_service.dart';
 import '../ukuebung_listelement.dart';
 import 'neuUebung.dart';
 
 // Startseite
 class UebungskatalogUebungen extends StatefulWidget {
-  //Überschirft mit Name des Übungskatalogs
   final String uebungskatalogName;
-  final String trainingsplanName;
+  final TrainingPlanProps props;
 
-  //Konstruktor
   UebungskatalogUebungen(
-      {required this.trainingsplanName, required this.uebungskatalogName});
+      {required this.props, required this.uebungskatalogName});
 
   @override
   State<UebungskatalogUebungen> createState() => _UebungskatalogUebungenState();
@@ -18,13 +21,35 @@ class UebungskatalogUebungen extends StatefulWidget {
 
 class _UebungskatalogUebungenState extends State<UebungskatalogUebungen> {
   // Temporäre Schnittstelle
-  List<String> uebungskataloge = ['Sit-Ups', 'Crunches', 'Klappmesser'];
+  List<Exercise> exercises = [];
 
   void neueUebungErstellen() {
     Navigator.push<Widget>(
         context,
         MaterialPageRoute<Widget>(
-            builder: (BuildContext context) => neueUebung()));
+            builder: (BuildContext context) => neueUebung(
+                props: NewExerciseProps(onNotify: onNewExerciseAdded),
+                catalogName: widget.uebungskatalogName)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var result = await DatabaseService()
+          .getExercisesByCatalog(widget.uebungskatalogName);
+
+      setState(() {
+        exercises = result;
+      });
+    });
+  }
+
+  Future<void> onNewExerciseAdded(Exercise exercise) async {
+    setState(() {
+      exercises.add(exercise);
+    });
   }
 
   @override
@@ -49,10 +74,9 @@ class _UebungskatalogUebungenState extends State<UebungskatalogUebungen> {
 
       // Body
       body: ListView.builder(
-          itemCount: uebungskataloge.length,
+          itemCount: exercises.length,
           itemBuilder: (context, i) {
-            return UkuebungListenelement(
-                widget.trainingsplanName, uebungskataloge[i]);
+            return UkuebungListenelement(widget.props, exercises[i]);
           }),
     );
   }

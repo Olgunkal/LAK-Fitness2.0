@@ -4,14 +4,16 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:lak_fitness/services/database_service.dart';
 import 'package:lak_fitness/styles/color.dart';
 import 'basis_theme.dart';
+import 'models/current_exercise_state.dart';
 
 // Startseite Listenelement
 class TpListenelement extends StatefulWidget {
-  final String uebungName;
-  final String trainingsplanName;
+  final CurrentExerciseState exerciseState;
+  final String trainingPlanName;
   final Function() onRemoved;
 
-  const TpListenelement(this.trainingsplanName, this.uebungName, this.onRemoved,
+  const TpListenelement(
+      this.trainingPlanName, this.exerciseState, this.onRemoved,
       {super.key});
 
   @override
@@ -19,10 +21,6 @@ class TpListenelement extends StatefulWidget {
 }
 
 class _TpListenelementState extends State<TpListenelement> {
-  int _saetze = 0;
-  int _wiederholungen = 0;
-  double _gewicht = 0;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,15 +47,14 @@ class _TpListenelementState extends State<TpListenelement> {
               SlidableAction(
                   icon: Icons.delete_forever,
                   backgroundColor: Colors.red,
-                  onPressed: (context) async =>
-                      await entferneUebung(widget.uebungName))
+                  onPressed: (context) async => await removeExercise())
             ],
           ),
           child: Center(
             child: ExpansionTile(
               title: Center(
                   child: Text(
-                widget.uebungName,
+                widget.exerciseState.exercise.name,
                 style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w600,
@@ -81,11 +78,14 @@ class _TpListenelementState extends State<TpListenelement> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: white)),
-                            hintText: _saetze.toString()),
-                        onChanged: (value) {
+                            hintText: widget.exerciseState.sets.toString()),
+                        onChanged: (value) async {
                           setState(() {
-                            _saetze = int.parse(value);
+                            widget.exerciseState.sets = int.parse(value);
                           });
+
+                          await DatabaseService().updateExerciseState(
+                              widget.trainingPlanName, widget.exerciseState);
                         },
                       )),
                 ),
@@ -105,11 +105,15 @@ class _TpListenelementState extends State<TpListenelement> {
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(color: white)),
-                              hintText: _wiederholungen.toString()),
-                          onChanged: (value) {
+                              hintText:
+                                  widget.exerciseState.repetions.toString()),
+                          onChanged: (value) async {
                             setState(() {
-                              _wiederholungen = int.parse(value);
+                              widget.exerciseState.repetions = int.parse(value);
                             });
+
+                            await DatabaseService().updateExerciseState(
+                                widget.trainingPlanName, widget.exerciseState);
                           },
                         ))),
                 ListTile(
@@ -128,12 +132,14 @@ class _TpListenelementState extends State<TpListenelement> {
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: white)),
-                            //hintText: (_gewicht as int).toString()
                           ),
-                          onChanged: (value) {
+                          onChanged: (value) async {
                             setState(() {
-                              _gewicht = double.parse(value);
+                              widget.exerciseState.weight = int.parse(value);
                             });
+
+                            await DatabaseService().updateExerciseState(
+                                widget.trainingPlanName, widget.exerciseState);
                           },
                         ))),
               ],
@@ -144,9 +150,9 @@ class _TpListenelementState extends State<TpListenelement> {
 
   checkoutUebung() {}
 
-  Future<void> entferneUebung(String name) async {
-    await DatabaseService()
-        .removeExercise(widget.trainingsplanName, widget.uebungName);
+  Future<void> removeExercise() async {
+    await DatabaseService().removeExercise(
+        widget.trainingPlanName, widget.exerciseState.exercise.name);
 
     widget.onRemoved();
   }

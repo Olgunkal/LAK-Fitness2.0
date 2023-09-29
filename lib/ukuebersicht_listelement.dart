@@ -18,8 +18,7 @@ class UkueListenelement extends StatelessWidget {
           context,
           MaterialPageRoute<Widget>(
               builder: (BuildContext context) => UebungskatalogUebungen(
-                  trainingsplanName: props.trainingPlanName,
-                  uebungskatalogName: uebungskatalogName)));
+                  props: props, uebungskatalogName: uebungskatalogName)));
     }
 
     return Container(
