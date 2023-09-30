@@ -54,7 +54,7 @@ class _ProfilState extends State<Profil> {
   }
 
   // Bearbeitung der Nutzereigenschaften
-  Future<T> editField<T>(String id, String field) async {
+  Future<T> editField<T>(String id, String field, var defaultValue) async {
     String newValue = "";
 
     return await showDialog(
@@ -65,15 +65,11 @@ class _ProfilState extends State<Profil> {
             borderRadius: BorderRadius.all(Radius.circular(30.0))),
         title: Text(
           '$field änderen',
-          style: const TextStyle(fontSize: 14, fontFamily: 'Red Hat Displays'),
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         content: TextField(
           autofocus: true,
-          style: TextStyle(
-            color: white,
-            fontSize: 14,
-            fontFamily: 'Red Hat Displays',
-          ),
+          style: Theme.of(context).textTheme.bodyMedium,
           decoration: InputDecoration(
             hintText: "Hier eingeben",
             hintStyle: TextStyle(color: grey),
@@ -85,11 +81,10 @@ class _ProfilState extends State<Profil> {
         actions: [
           // Abbrechen Button
           TextButton(
-            onPressed: () => Navigator.of(context).pop(T == String ? "" : 0),
+            onPressed: () => Navigator.of(context).pop(defaultValue),
             child: Text(
               'Abbrechen',
-              style: TextStyle(
-                  color: white, fontSize: 14, fontFamily: 'Red Hat Displays'),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
 
@@ -110,8 +105,7 @@ class _ProfilState extends State<Profil> {
             },
             child: Text(
               'Speichern',
-              style: TextStyle(
-                  color: white, fontSize: 14, fontFamily: 'Red Hat Displays'),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
         ],
@@ -232,13 +226,13 @@ class _ProfilState extends State<Profil> {
                       text: user.weight.toString(),
                       unit: 'kg',
                       // Änderung des Gewichts
-                      onPressed: () =>
-                          editField<int>(currentuser.uid, 'Gewicht')
-                              .then((value) async => {
-                                    setState(() => user.weight = value),
-                                    await DatabaseService()
-                                        .updateUserData(weight: user.weight)
-                                  })),
+                      onPressed: () => editField<int>(
+                              currentuser.uid, 'Gewicht', user.weight)
+                          .then((value) async => {
+                                setState(() => user.weight = value),
+                                await DatabaseService()
+                                    .updateUserData(weight: user.weight)
+                              })),
 
                   // Körpergröße des aktuellen Benutzers
                   MyTextBox(
@@ -246,12 +240,13 @@ class _ProfilState extends State<Profil> {
                     text: user.height.toString(),
                     unit: 'cm',
                     // Änderung der Körpergröße
-                    onPressed: () => editField<int>(currentuser.uid, 'Größe')
-                        .then((value) async => {
-                              setState(() => user.height = value),
-                              await DatabaseService()
-                                  .updateUserData(height: user.height)
-                            }),
+                    onPressed: () =>
+                        editField<int>(currentuser.uid, 'Größe', user.height)
+                            .then((value) async => {
+                                  setState(() => user.height = value),
+                                  await DatabaseService()
+                                      .updateUserData(height: user.height)
+                                }),
                   ),
 
                   // Email des aktuellen Benutzers
@@ -260,12 +255,13 @@ class _ProfilState extends State<Profil> {
                     text: user.email,
                     unit: '',
                     // Änderung des Emails
-                    onPressed: () => editField<String>(currentuser.uid, 'Email')
-                        .then((value) async => {
-                              setState(() => user.email = value),
-                              await DatabaseService()
-                                  .updateUserData(email: user.email)
-                            }),
+                    onPressed: () =>
+                        editField<String>(currentuser.uid, 'Email', user.email)
+                            .then((value) async => {
+                                  setState(() => user.email = value),
+                                  await DatabaseService()
+                                      .updateUserData(email: user.email)
+                                }),
                   ),
 
                   // Passwort ändern

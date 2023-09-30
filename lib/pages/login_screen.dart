@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/loginAndRegistration/Textfield/my_textfield.dart';
-import 'package:lak_fitness/loginAndRegistration/button/my_button.dart';
+import 'package:lak_fitness/styles/button.dart';
+import 'package:lak_fitness/styles/color.dart';
 
 import '../services/dialog_service.dart';
 
@@ -46,33 +47,29 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 43, 41, 41),
+        backgroundColor: background,
         body: SafeArea(
             child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 // Titel
-                const Text(
+                Text(
                   'Anmeldung',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 48,
-                  ),
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
                 const SizedBox(height: 20),
                 // Email Textfeld Überschrift
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('E-Mail',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
+                      Text(
+                        'E-Mail',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      )
                     ],
                   ),
                 ),
@@ -83,17 +80,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: false,
                 ),
                 // Passwort Textfeld Überschrift
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text('Passwort',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                 ),
@@ -111,13 +105,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Text('Noch kein Konto? ',
-                          style: TextStyle(color: Colors.white)),
+                      Text('Noch kein Konto? ',
+                          style: Theme.of(context).textTheme.bodySmall),
                       GestureDetector(
                         onTap: widget.onTap,
-                        child: const Text(
+                        child: Text(
                           'Jetzt Registrieren!',
-                          style: TextStyle(color: (Colors.blue)),
+                          style: TextStyle(
+                              color: purple,
+                              fontSize: 12,
+                              fontFamily: 'RedHatDisplay'),
                         ),
                       ),
                     ],
@@ -126,10 +123,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 20),
                 // Anmelde Button
-                MyButton(
-                  buttonText: 'anmelden',
-                  onTap: signUserIn,
-                ),
+                ElevatedButton(
+                    onPressed: signUserIn,
+                    style: buttonPrimary,
+                    child: Text(
+                      'anmelden',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    )),
               ],
             ),
           ),

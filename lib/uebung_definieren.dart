@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/styles/text_box.dart';
-import 'basis_theme.dart';
 
 class Uebung_definieren extends StatefulWidget {
   final String uebungsName;
 
   //Konstruktor
-  Uebung_definieren({required this.uebungsName});
+  const Uebung_definieren({super.key, required this.uebungsName});
 
   @override
   State<Uebung_definieren> createState() => _Uebung_definierenState();
@@ -29,37 +28,34 @@ class _Uebung_definierenState extends State<Uebung_definieren> {
         // Body
         body: Column(
           children: <Widget>[
-            Container(
-              width: breiteContainer,
+            const SizedBox(
               child: Text("Beschreibung"),
             ),
 
             //Neu Übung name
-            Container(width: breiteContainer, child: Text(beschreibung)),
+            SizedBox(child: Text(beschreibung)),
 
-            Container(
-              width: breiteContainer,
+            const SizedBox(
               child: Text("Katalog"),
             ),
 
             //DropDown Katalog
-            Container(
-                width: breiteContainer,
+            SizedBox(
+                //breiteContainer,
                 child: MyTextBox(
-                  sectionName: 'Gewicht:',
-                  text: "80",
-                  unit: 'kg',
-                  onPressed: () {}, //() =>
-                  // editField<int>(currentuser.uid, 'Gewicht')
-                  //     .then((value) async => {
-                  //   setState(() => user.weight = value),
-                  //   await DatabaseService()
-                  //       .updateUserData(weight: user.weight)
-                  // }
-                )),
+              sectionName: 'Gewicht:',
+              text: "80",
+              unit: 'kg',
+              onPressed: () {}, //() =>
+              // editField<int>(currentuser.uid, 'Gewicht')
+              //     .then((value) async => {
+              //   setState(() => user.weight = value),
+              //   await DatabaseService()
+              //       .updateUserData(weight: user.weight)
+              // }
+            )),
 
-            Container(
-              width: breiteContainer,
+            SizedBox(
               child: MyTextBox(
                   sectionName: 'Wiederholungen:',
                   text: "2",
@@ -75,8 +71,8 @@ class _Uebung_definierenState extends State<Uebung_definieren> {
                   ),
             ),
 
-            Container(
-                width: breiteContainer,
+            SizedBox(
+                //breiteContainer,
                 child: MyTextBox(
                     sectionName: 'Sätze:', text: '3', unit: '', onPressed: () {}
                     // =>

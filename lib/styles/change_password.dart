@@ -16,6 +16,8 @@ class _ChangePasswordState extends State<ChangePassword> {
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
   final confirmedController = TextEditingController();
+  bool obsTxt = true;
+
   late String password;
   late String confirmedPassword;
 
@@ -51,6 +53,14 @@ class _ChangePasswordState extends State<ChangePassword> {
     }
   }
 
+  hideOffOn(bool obscureText) {
+    if (obscureText == true) {
+      obsTxt = false;
+    } else {
+      obsTxt = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Ausgabe als AlertDialog
@@ -68,10 +78,15 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextFormField(
                 controller: oldPasswordController,
                 style: Theme.of(context).textTheme.bodyMedium,
+                obscureText: true,
                 decoration: InputDecoration(
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide(),
-                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: purple),
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: white),
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
                   ),
                   hintText: 'altes Passwort eingeben',
                   labelText: 'altes Passwort*',
@@ -94,18 +109,25 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextFormField(
                 controller: newPasswordController,
                 style: Theme.of(context).textTheme.bodyMedium,
+                obscureText: obsTxt,
                 decoration: InputDecoration(
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide(),
-                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: purple),
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: white),
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
                   ),
                   hintText: 'neues Passwort eingeben',
                   labelText: 'neues Passwort*',
                   labelStyle: Theme.of(context).textTheme.titleSmall,
                   floatingLabelBehavior: FloatingLabelBehavior.always,
-                  suffixIcon: const Icon(Icons.remove_red_eye),
-                  helperText:
-                      'min. 8 Zeichen (Groß- und Kleinbuchstaben, min. eine Zahl)',
+                  suffixIcon: IconButton(
+                    onPressed: hideOffOn(obsTxt),
+                    icon: const Icon(Icons.remove_red_eye),
+                  ),
+                  helperText: 'min. 6 Zeichen ',
                   helperMaxLines: 2,
                 ),
                 onChanged: (String txt) => password = txt,
@@ -123,9 +145,15 @@ class _ChangePasswordState extends State<ChangePassword> {
               TextFormField(
                 controller: confirmedController,
                 style: Theme.of(context).textTheme.bodyMedium,
+                obscureText: true,
                 decoration: InputDecoration(
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(6)),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: purple),
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: white),
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
                   ),
                   hintText: 'Passwort erneut eingeben',
                   labelText: 'Neues Passwort bestätigen',

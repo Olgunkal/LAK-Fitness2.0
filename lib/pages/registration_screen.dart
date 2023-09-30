@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:lak_fitness/styles/button.dart';
+import 'package:lak_fitness/styles/color.dart';
 import '../loginAndRegistration/Textfield/my_textfield.dart';
-import '../loginAndRegistration/button/my_button.dart';
-
 import '../services/database_service.dart';
 import '../services/dialog_service.dart';
 
@@ -47,33 +46,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     }
 
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 43, 41, 41),
+        backgroundColor: background,
         body: SafeArea(
             child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
                 // Titel
-                const Text(
+                Text(
                   'Registrierung',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 48,
-                  ),
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
                 const SizedBox(height: 30),
                 // Benutzername Textfeld Überschrift
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text('Benutzername',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                 ),
@@ -85,17 +78,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
 
                 // Email Textfeld Überschrift
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text('E-Mail',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                 ),
@@ -107,17 +97,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
 
                 // Passwort Textfeld
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text('Passwort',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                 ),
@@ -128,17 +115,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   obscureText: true,
                 ),
                 // Passwort Textfeld erneut eingeben Titel
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50.0, vertical: 10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text('Passwort bestätigen',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                 ),
@@ -149,19 +133,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
-                // Kein Konto -> weiterleitung Regristration Text
+                // Kein Konto -> weiterleitung Registrierungstext
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Text('Schon Registriert? ',
-                          style: TextStyle(color: Colors.white)),
+                      Text('Schon Registriert? ',
+                          style: Theme.of(context).textTheme.bodySmall),
                       GestureDetector(
                         onTap: widget.onTap,
-                        child: const Text(
+                        child: Text(
                           'Jetzt Anmelden!',
-                          style: TextStyle(color: (Colors.blue)),
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'RedHatDisplay',
+                              color: purple),
                         ),
                       ),
                     ],
@@ -169,10 +156,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 const SizedBox(height: 20),
                 // Kein Konto -> weiterleitung Regristration Button
-                MyButton(
-                  buttonText: 'registrieren',
-                  onTap: registerUser,
-                ),
+                ElevatedButton(
+                    onPressed: registerUser,
+                    style: buttonPrimary,
+                    child: Text(
+                      'registrieren',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    )),
               ],
             ),
           ),

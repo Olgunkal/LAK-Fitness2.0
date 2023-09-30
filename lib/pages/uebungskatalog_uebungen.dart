@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lak_fitness/styles/color.dart';
 import '../models/exercise.dart';
 import '../props/new_exercise_props.dart';
 import '../props/trainingplan_props.dart';
@@ -56,11 +57,15 @@ class _UebungskatalogUebungenState extends State<UebungskatalogUebungen> {
   Widget build(BuildContext context) {
     // Hauptbildschirm
     return Scaffold(
+      backgroundColor: background,
       //AppBar
       appBar: AppBar(
         //Inhalt
         title: Text(widget.uebungskatalogName,
-            style: Theme.of(context).textTheme.headlineMedium),
+            style: Theme.of(context).textTheme.titleLarge),
+
+        // Farbe
+        backgroundColor: background,
 
         //Button Neue Übung erstellen
         actions: [

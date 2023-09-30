@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lak_fitness/basis_theme.dart';
 import 'package:lak_fitness/pages/uebungskatalog_uebungen.dart';
 import 'package:lak_fitness/props/trainingplan_props.dart';
+import 'package:lak_fitness/styles/color.dart';
 
 // Startseite Listenelement
 class UkueListenelement extends StatelessWidget {
@@ -24,19 +24,15 @@ class UkueListenelement extends StatelessWidget {
     return Container(
       //Layout
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: const BoxDecoration(
-          color: black,
-          border: Border(bottom: BorderSide(color: lila, width: 2.0))),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: purple, width: 2.0))),
 
       // Listenelemente
       child: ListTile(
         title: Center(
           child: Text(
             uebungskatalogName,
-            style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.w600,
-                color: Colors.white),
+            style: Theme.of(context).textTheme.titleSmall,
           ),
         ),
         onTap: uebungsKatalogAuswahl,

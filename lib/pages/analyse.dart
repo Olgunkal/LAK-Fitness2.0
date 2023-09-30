@@ -1,7 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:lak_fitness/basis_theme.dart';
 import 'package:lak_fitness/styles/color.dart';
 
 import '../services/database_service.dart';
@@ -109,7 +108,6 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
   @override
   Widget build(BuildContext context) {
     //Layoutbreite (aus basis_theme.dart)
-    var breite = breiteContainer;
 
     //Eingrenzung Zeitraum DatePicker
     var startZeitraum = DateTime(2021);
@@ -128,10 +126,9 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
         children: <Widget>[
           //Auswahl Analyse nach
           Container(
-            width: breite,
             padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.only(top: 20, left: 60, right: 60),
             child:
-
                 //DropDown Liste mit Kategorien nach denen gefiltert werden kann
                 DropdownButtonFormField(
               value: selectedAnalysisType,
@@ -158,8 +155,8 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
 
           //Auswahl Übung
           Container(
-            width: breite,
             padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.symmetric(horizontal: 60),
             child:
 
                 //DropDown zur Auswahl einer Übung, nach der gefiltert werden soll
@@ -190,14 +187,17 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                  width: breite / 2,
                   padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.symmetric(vertical: 5),
 
                   //Auswahl als Button
                   child: ElevatedButton(
-                    child: Text("${_datumVon.day.toString()}"
-                        ".${_datumVon.month.toString()}."
-                        "${_datumVon.year.toString()}"),
+                    child: Text(
+                      "${_datumVon.day.toString()}"
+                      ".${_datumVon.month.toString()}."
+                      "${_datumVon.year.toString()}",
+                      style: const TextStyle(fontSize: 16),
+                    ),
                     onPressed: () async {
                       //DatePicker zur Kalenderauswahl
                       DateTime? neuDatumVon = await showDatePicker(
@@ -211,14 +211,16 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
 
               //Auswahl Datum bis
               Container(
-                  width: breite / 2,
                   padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.symmetric(vertical: 5),
 
                   //Auswahl als Button
                   child: ElevatedButton(
-                    child: Text("${_datumBis.day.toString()}"
+                    child: Text(
+                        "${_datumBis.day.toString()}"
                         ".${_datumBis.month.toString()}."
-                        "${_datumBis.year.toString()}"),
+                        "${_datumBis.year.toString()}",
+                        style: const TextStyle(fontSize: 16)),
                     onPressed: () async {
                       //DatePicker zur Kalenderauswahl
                       DateTime? neuDatumBis = await showDatePicker(
@@ -233,8 +235,8 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
           ),
 
           //Darstellung Graph
-          SizedBox(
-              width: breite + 50.0,
+          Container(
+              margin: const EdgeInsets.symmetric(horizontal: 40),
               height: 400.0,
               child: LineChart(LineChartData(
                 minY: 10.0,
@@ -294,15 +296,15 @@ class _AnalysebildschirmState extends State<Analysebildschirm> {
                 //Formatierung Umrandung
                 borderData: FlBorderData(
                     border: Border.all(
-                  color: lila,
+                  color: purple,
                 )),
 
                 //Formatierung Raster
                 gridData: FlGridData(
                     drawVerticalLine: false,
                     getDrawingHorizontalLine: (value) {
-                      return const FlLine(
-                        color: lila,
+                      return FlLine(
+                        color: purple,
                       );
                     }),
               ))),

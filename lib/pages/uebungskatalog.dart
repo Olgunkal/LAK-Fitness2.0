@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lak_fitness/styles/color.dart';
 import '../props/trainingplan_props.dart';
 import '../ukuebersicht_listelement.dart';
 
@@ -23,11 +24,14 @@ class _UebungskatalogUebersichtState extends State<UebungskatalogUebersicht> {
   Widget build(BuildContext context) {
     // Hauptbildschirm
     return Scaffold(
+      backgroundColor: background,
       //AppBar
       appBar: AppBar(
         //Inhalt
         title: Text(ueberschriftUebungskatalogUebersicht,
-            style: Theme.of(context).textTheme.headlineMedium),
+            style: Theme.of(context).textTheme.titleLarge),
+        // Farbe
+        backgroundColor: background,
       ),
 
       // Body

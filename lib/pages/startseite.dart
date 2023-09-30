@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lak_fitness/styles/color.dart';
 import '../models/training_plan.dart';
 import '../props/trainingplan_props.dart';
 import '../services/database_service.dart';
@@ -80,11 +81,13 @@ class _StartseiteState extends State<Startseite> {
   Widget build(BuildContext context) {
     // Hauptbildschirm
     return Scaffold(
+      backgroundColor: background,
       //AppBar
       appBar: AppBar(
         //Inhalt
-        title: Text('Home', style: Theme.of(context).textTheme.headlineMedium),
-
+        title: Text('Home', style: Theme.of(context).textTheme.titleLarge),
+        //Farbe
+        backgroundColor: background,
         //Button
         actions: [
           IconButton(

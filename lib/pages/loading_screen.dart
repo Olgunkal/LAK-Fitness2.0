@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lak_fitness/loginAndRegistration/auth_page.dart';
+import 'package:lak_fitness/styles/color.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -21,14 +22,31 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 43, 41, 41),
+    return Scaffold(
+      backgroundColor: background,
       body: Center(
-        child: Text('LAK-Fitness',
-            style: TextStyle(
-              color: Colors.purple,
-              fontSize: 54,
-            )),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('LAK-Fitness',
+                  style: TextStyle(
+                    color: purple,
+                    fontSize: 45,
+                    fontFamily: 'Audiowide',
+                  )),
+              const SizedBox(
+                height: 32,
+              ),
+              Icon(
+                Icons.fitness_center_outlined,
+                size: 80,
+                color: purple,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

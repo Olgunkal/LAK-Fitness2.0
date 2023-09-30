@@ -22,7 +22,7 @@ class ChartTest extends StatelessWidget {
         ),
 
         // Body
-        body: Container(
+        body: SizedBox(
           width: 200.0,
           height: 400.0,
           child: LineChart(LineChartData(

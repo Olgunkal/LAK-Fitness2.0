@@ -1,8 +1,8 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:lak_fitness/basis_theme.dart';
 import '../props/new_exercise_props.dart';
 import '../services/database_service.dart';
+import 'package:lak_fitness/styles/color.dart';
 
 class neueUebung extends StatefulWidget {
   final NewExerciseProps props;
@@ -42,76 +42,72 @@ class _neueUebungState extends State<neueUebung> {
 
     // Hauptbildschirm
     return Scaffold(
+        backgroundColor: background,
         //AppBar
         appBar: AppBar(
           title: Text('Übung erstellen',
               style: Theme.of(context).textTheme.headlineMedium),
+          backgroundColor: background,
         ),
 
         // Body
         body: Column(
           children: <Widget>[
             const SizedBox(
-              width: breiteContainer,
               child: Text("Name der Übung"),
             ),
 
             // Texfeld für neue Übung
             SizedBox(
-                width: breiteContainer,
                 child: TextField(
-                  onChanged: (text) {
-                    name = text;
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Trainingsplan",
-                    hintText: "Übung",
-                  ),
-                )),
+              onChanged: (text) {
+                name = text;
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Trainingsplan",
+                hintText: "Übung",
+              ),
+            )),
 
             const SizedBox(
-              width: breiteContainer,
               child: Text("Katalog"),
             ),
 
             //DropDown Katalog
             SizedBox(
-                width: breiteContainer,
                 child: DropdownSearch<String>(
-                  popupProps: PopupProps.menu(
-                    showSelectedItems: true,
-                    disabledItemFn: (String s) => s.startsWith('I'),
-                    showSearchBox: true,
-                  ),
-                  items: availableCatalogues,
-                  dropdownDecoratorProps: const DropDownDecoratorProps(
-                    dropdownSearchDecoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.yellow)),
-                      labelText: "Katalog",
-                    ),
-                  ),
-                )),
+              popupProps: PopupProps.menu(
+                showSelectedItems: true,
+                disabledItemFn: (String s) => s.startsWith('I'),
+                showSearchBox: true,
+              ),
+              items: availableCatalogues,
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.yellow)),
+                  labelText: "Katalog",
+                ),
+              ),
+            )),
 
             const SizedBox(
-              width: breiteContainer,
               child: Text("Beschreibung"),
             ),
 
             // Textfeld für Beschreibung
             SizedBox(
-                width: breiteContainer,
                 child: TextField(
-                  onChanged: (text) {
-                    description = text;
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Beschreibung",
-                    hintText: "Beschreibung",
-                  ),
-                )),
+              onChanged: (text) {
+                description = text;
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Beschreibung",
+                hintText: "Beschreibung",
+              ),
+            )),
             // Button zum erstellen einer Übung
             TextButton(
               onPressed: () => submit(name, description),

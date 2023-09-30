@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lak_fitness/styles/color.dart';
 
 class MyTextField extends StatelessWidget {
   final controller;
@@ -15,29 +16,29 @@ class MyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50.0),
-      child: TextField(
-        style: TextStyle(color: Colors.white),
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black),
+        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+        child: TextField(
+          style: Theme.of(context).textTheme.bodyMedium,
+          controller: controller,
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: purple),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: white),
             ),
             hintText: hintText,
             suffixIcon: IconButton(
               splashRadius: 20,
               onPressed: controller.clear,
-              icon: const Icon(
+              icon: Icon(
                 Icons.clear,
-                color: Colors.white,
+                color: white,
               ),
             ),
-            hintStyle: TextStyle(color: Colors.grey[500])),
-      ),
-    );
+            hintStyle: TextStyle(color: grey),
+          ),
+        ));
   }
 }

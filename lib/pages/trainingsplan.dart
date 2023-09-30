@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lak_fitness/styles/color.dart';
 import '../models/current_exercise_state.dart';
 import '../props/trainingplan_props.dart';
 import '../services/database_service.dart';
@@ -55,12 +56,14 @@ class _TrainingsplanState extends State<Trainingsplan> {
   Widget build(BuildContext context) {
     // Hauptbildschirm
     return Scaffold(
+      backgroundColor: background,
       //AppBar
       appBar: AppBar(
         //Inhalt
         title: Text(widget.props.trainingPlanName,
-            style: Theme.of(context).textTheme.headlineMedium),
-
+            style: Theme.of(context).textTheme.titleLarge),
+        // Farbe
+        backgroundColor: background,
         //Button zum öffnen des Katalogs
         actions: [
           IconButton(

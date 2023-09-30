@@ -13,9 +13,9 @@ class DialogService {
     await showDialog(
       context: context,
       builder: (context) {
-        return const Center(
+        return Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            valueColor: AlwaysStoppedAnimation<Color>(white),
           ),
         );
       },
@@ -27,11 +27,11 @@ class DialogService {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.purple,
+          backgroundColor: purple,
           title: Center(
               child: Text(
             message,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: white),
           )),
         );
       },
@@ -46,7 +46,7 @@ class DialogService {
       confirmText: 'Speichern',
       fieldLabelText: 'Geburtsdatum',
       initialDate: initial,
-      firstDate: DateTime(2021),
+      firstDate: DateTime(1900),
       lastDate: DateTime(2500),
       builder: (context, child) {
         return Theme(

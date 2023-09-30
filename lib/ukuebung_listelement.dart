@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lak_fitness/basis_theme.dart';
 import 'package:lak_fitness/props/trainingplan_props.dart';
 import 'package:lak_fitness/services/database_service.dart';
-import 'package:lak_fitness/uebung_definieren.dart';
+import 'package:lak_fitness/styles/color.dart';
 
 import 'models/exercise.dart';
 
@@ -32,40 +31,27 @@ class UkuebungListenelement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void zeigeInfotxt() {
-      Navigator.push<Widget>(
-          context,
-          MaterialPageRoute<Widget>(
-              builder: (BuildContext context) =>
-                  Uebung_definieren(uebungsName: exercise.name)));
-    }
-
     return Container(
       //Layout
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: const BoxDecoration(
-          color: black,
-          border: Border(bottom: BorderSide(color: lila, width: 2.0))),
+      decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: purple, width: 2.0))),
 
-      // Listenelemente
-      child: ListTile(
-        // Infobutton am Anfang des Listenelements
-        leading: IconButton(
-          onPressed: zeigeInfotxt,
-          icon: const Icon(Icons.info),
-        ),
-
-        //Title Listenelement
-        title: Text(
-          exercise.name,
-          style: const TextStyle(
-              fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.white),
-        ),
-
+      // Listenelemente ausfahrbar
+      child: ExpansionTile(
+        title:
+            Text(exercise.name, style: Theme.of(context).textTheme.titleSmall),
         trailing: IconButton(
           onPressed: () => addExercise(context),
           icon: const Icon(Icons.add_circle_outline_sharp),
         ),
+        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.info)),
+        iconColor: purple,
+        children: [
+          ListTile(
+            title: Text(exercise.description),
+          )
+        ],
       ),
     );
   }

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:lak_fitness/services/database_service.dart';
 import 'package:lak_fitness/styles/color.dart';
-import 'basis_theme.dart';
 import 'models/current_exercise_state.dart';
 
 // Startseite Listenelement
@@ -26,9 +25,9 @@ class _TpListenelementState extends State<TpListenelement> {
     return Container(
       //Layout
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      decoration: const BoxDecoration(
-          color: black,
-          border: Border(bottom: BorderSide(color: lila, width: 2.0))),
+      decoration: BoxDecoration(
+          color: background,
+          border: Border(bottom: BorderSide(color: purple, width: 2.0))),
 
       // Listenelemente
       child: Slidable(
@@ -63,6 +62,7 @@ class _TpListenelementState extends State<TpListenelement> {
               trailing: const Text(""),
               children: [
                 ListTile(
+                  tileColor: grey,
                   title: const Text('Sätze'),
                   trailing: Container(
                       width: 50,
